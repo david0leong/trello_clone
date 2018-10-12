@@ -9,3 +9,25 @@
 - Allow reordering of items from an application that will use this API (the
   order must be persisted in the DB). Can skip UI for dragging items if
   desired, but API endpoints must support this
+
+## How to run
+
+### Install Docker
+
+### Build Docker Development Environment
+
+```bash
+$ docker-compose build
+```
+
+### Create database
+
+```bash
+$ docker-compose run --rm web rake db:create
+```
+
+### Run Local Docker Development Environment
+
+```bash
+$ docker-compose  up
+```

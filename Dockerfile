@@ -10,4 +10,7 @@ COPY Gemfile.lock /app/Gemfile.lock
 
 RUN bundle install
 
+COPY ./entrypoints /entrypoints
+RUN chmod -R +x /entrypoints
+
 COPY . /app
