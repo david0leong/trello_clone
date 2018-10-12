@@ -37,22 +37,4 @@ class ColumnTest < ActiveSupport::TestCase
 
     assert dup_column.valid?
   end
-
-  test 'position should be greater than 0' do
-    @column.position = -1
-
-    assert_not @column.valid?
-  end
-  
-  test 'position should be unique per board' do
-    dup_column = @column.dup
-    dup_column.name = 'icebox'
-    @column.save
-
-    assert_not dup_column.valid?
-    
-    dup_column.position = 5
-
-    assert dup_column.valid?
-  end
 end
