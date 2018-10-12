@@ -31,3 +31,9 @@ $ docker-compose run --rm app rake db:create
 ```bash
 $ docker-compose  up
 ```
+
+### Run api Unit Tests
+
+```bash
+$ docker-compose run app rails test
+```
