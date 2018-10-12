@@ -9,6 +9,3 @@
 - Allow reordering of items from an application that will use this API (the
   order must be persisted in the DB). Can skip UI for dragging items if
   desired, but API endpoints must support this
-
-You're free to use any technology you want on the backend, and any SPA
-framework on the frontend.
