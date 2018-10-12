@@ -3,8 +3,8 @@ require 'test_helper'
 class BoardTest < ActiveSupport::TestCase
   def setup
     @board = Board.new(
-      name: 'personal',
-      title: 'Personal board'
+      name: 'MyTime',
+      title: 'MyTime board'
     )
   end
 
