@@ -23,7 +23,7 @@ $ docker-compose build
 ### Create database
 
 ```bash
-$ docker-compose run --rm web rake db:create
+$ docker-compose run --rm app rake db:create
 ```
 
 ### Run Local Docker Development Environment
