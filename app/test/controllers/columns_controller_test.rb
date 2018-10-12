@@ -12,7 +12,7 @@ class ColumnsControllerTest < ActionDispatch::IntegrationTest
 
   test "should create column" do
     assert_difference('Column.count') do
-      post board_columns_url(@column.board), params: { column: { name: @column.name + '1', position: @column.position + 1, title: @column.title } }, as: :json
+      post board_columns_url(@column.board), params: { column: { name: @column.name, position: @column.position, title: @column.title } }, as: :json
     end
 
     assert_response 201

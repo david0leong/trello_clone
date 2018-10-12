@@ -25,16 +25,4 @@ class ColumnTest < ActiveSupport::TestCase
 
     assert_not @column.valid?
   end
-
-  test 'name should be unique per board' do
-    dup_column = @column.dup
-    dup_column.position = 5
-    @column.save
-    
-    assert_not dup_column.valid?
-    
-    dup_column.name = 'icebox'
-
-    assert dup_column.valid?
-  end
 end

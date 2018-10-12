@@ -1,7 +1,5 @@
 class Board < ApplicationRecord
-  has_many :columns, -> { order(position: :asc) }
+  has_many :columns, -> { order(position: :asc) }, dependent: :destroy
   
-  validates :name,
-            presence: true,
-            uniqueness: true
+  validates :name, presence: true
 end

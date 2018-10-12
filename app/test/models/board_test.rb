@@ -17,11 +17,4 @@ class BoardTest < ActiveSupport::TestCase
     
     assert_not @board.valid?
   end
-
-  test 'name should be unique' do
-    dup_board = @board.dup
-    @board.save
-    
-    assert_not dup_board.valid?
-  end
 end

@@ -12,7 +12,7 @@ class TasksControllerTest < ActionDispatch::IntegrationTest
 
   test "should create task" do
     assert_difference('Task.count') do
-      post column_tasks_url(@task.column), params: { task: { name: @task.name + '1', position: @task.position + 1, title: @task.title } }, as: :json
+      post column_tasks_url(@task.column), params: { task: { name: @task.name, position: @task.position, title: @task.title } }, as: :json
     end
 
     assert_response 201
