@@ -1,11 +1,9 @@
 # Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
 
 personal:
-  id: 1
   name: personal
   title: Personal
 
 project:
-  id: 2
   name: project
   title: Project

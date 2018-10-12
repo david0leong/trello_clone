@@ -2,17 +2,17 @@ require 'test_helper'
 
 class ColumnsControllerTest < ActionDispatch::IntegrationTest
   setup do
-    @column = columns(:one)
+    @column = columns(:personal_todo)
   end
 
   test "should get index" do
-    get columns_url, as: :json
+    get board_columns_url(@column.board), as: :json
     assert_response :success
   end
 
   test "should create column" do
     assert_difference('Column.count') do
-      post columns_url, params: { column: { board_id: @column.board_id, name: @column.name, position: @column.position, title: @column.title } }, as: :json
+      post board_columns_url(@column.board), params: { column: { name: @column.name + '1', position: @column.position + 1, title: @column.title } }, as: :json
     end
 
     assert_response 201

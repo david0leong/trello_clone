@@ -1,9 +1,10 @@
 class ColumnsController < ApplicationController
+  before_action :set_board, only: [:index, :create]
   before_action :set_column, only: [:show, :update, :destroy]
 
   # GET /columns
   def index
-    @columns = Column.all
+    @columns = @board.columns
 
     render json: @columns
   end
@@ -15,7 +16,7 @@ class ColumnsController < ApplicationController
 
   # POST /columns
   def create
-    @column = Column.new(column_params)
+    @column = @board.columns.new(column_params)
 
     if @column.save
       render json: @column, status: :created, location: @column
@@ -39,6 +40,10 @@ class ColumnsController < ApplicationController
   end
 
   private
+    def set_board
+      @board=Board.find(params[:board_id])
+    end
+    
     # Use callbacks to share common setup or constraints between actions.
     def set_column
       @column = Column.find(params[:id])

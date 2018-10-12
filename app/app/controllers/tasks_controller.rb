@@ -1,9 +1,10 @@
 class TasksController < ApplicationController
+  before_action :set_column, only: [:index, :create]
   before_action :set_task, only: [:show, :update, :destroy]
 
   # GET /tasks
   def index
-    @tasks = Task.all
+    @tasks = @column.tasks
 
     render json: @tasks
   end
@@ -15,7 +16,7 @@ class TasksController < ApplicationController
 
   # POST /tasks
   def create
-    @task = Task.new(task_params)
+    @task = @column.tasks.new(task_params)
 
     if @task.save
       render json: @task, status: :created, location: @task
@@ -39,6 +40,10 @@ class TasksController < ApplicationController
   end
 
   private
+    def set_column
+      @column = Column.find(params[:column_id])
+    end
+    
     # Use callbacks to share common setup or constraints between actions.
     def set_task
       @task = Task.find(params[:id])

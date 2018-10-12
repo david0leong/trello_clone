@@ -2,17 +2,17 @@ require 'test_helper'
 
 class TasksControllerTest < ActionDispatch::IntegrationTest
   setup do
-    @task = tasks(:one)
+    @task = tasks(:personal_todo_task1)
   end
 
   test "should get index" do
-    get tasks_url, as: :json
+    get column_tasks_url(@task.column), as: :json
     assert_response :success
   end
 
   test "should create task" do
     assert_difference('Task.count') do
-      post tasks_url, params: { task: { column_id: @task.column_id, name: @task.name, position: @task.position, title: @task.title } }, as: :json
+      post column_tasks_url(@task.column), params: { task: { name: @task.name + '1', position: @task.position + 1, title: @task.title } }, as: :json
     end
 
     assert_response 201

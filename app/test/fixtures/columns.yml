@@ -1,42 +1,36 @@
 # Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
 
 personal_todo:
-  id: 1
   board: personal
   name: personal_todo
   title: Personal to-dos
   position: 1
 
 personal_doing:
-  id: 2
   board: personal
   name: personal_doing
   title: Personal to-dos in progress
   position: 2
 
 personal_done:
-  id: 3
   board: personal
   name: personal_done
   title: Personal to-dos completed
   position: 3
 
 project_todo:
-  id: 4
   board: project
   name: project_todo
   title: project to-dos
   position: 1
 
 project_doing:
-  id: 5
   board: project
   name: project_doing
   title: project to-dos in progress
   position: 2
 
 project_done:
-  id: 6
   board: project
   name: project_done
   title: project to-dos completed

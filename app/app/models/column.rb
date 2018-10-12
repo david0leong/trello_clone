@@ -1,5 +1,7 @@
 class Column < ApplicationRecord
   belongs_to :board
+  has_many :tasks
+  
   acts_as_list scope: :board
 
   validates :board, presence: true

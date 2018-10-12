@@ -1,7 +1,12 @@
 Rails.application.routes.draw do
-  resources :tasks
   # For details on the DSL available within this file, see http://guides.rubyonrails.org/routing.html
   
-  resources :boards
-  resources :columns
+  shallow do
+    resources :boards do
+      resources :columns do
+        resources :tasks
+      end
+    end
+  end
+  
 end
