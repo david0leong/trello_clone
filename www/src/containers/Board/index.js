@@ -1,11 +1,10 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
+import { connect } from 'react-redux'
 
-import BoardAPI from '../../utils/api'
+import { getBoardById } from '../../redux/boards/selectors'
 
-const Board = props => {
-  const board = BoardAPI.get(parseInt(props.match.params.id, 10))
-
+const Board = ({ board }) => {
   if (!board) {
     return <div>Sorry, but the board was not found</div>
   }
@@ -24,4 +23,13 @@ const Board = props => {
   )
 }
 
-export default Board
+const mapStateToProps = (state, props) => ({
+  board: getBoardById(state, props.match.params.id),
+})
+
+const mapDispatchToProps = null
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(Board)
