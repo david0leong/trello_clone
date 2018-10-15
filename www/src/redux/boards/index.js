@@ -3,8 +3,8 @@ import { normalize } from 'normalizr'
 import flow from 'lodash/fp/flow'
 import set from 'lodash/fp/set'
 
-import { LOAD_BOARDS } from './actionTypes'
-import { boardSchema } from './schemas'
+import { LOAD_BOARDS_SUCCESS } from './actionTypes'
+import { boardListSchema } from './schemas'
 
 const initialState = {
   byId: {},
@@ -13,8 +13,8 @@ const initialState = {
 
 export default handleActions(
   {
-    [LOAD_BOARDS](state, action) {
-      const normalizedData = normalize(action.payload, boardSchema)
+    [LOAD_BOARDS_SUCCESS](state, action) {
+      const normalizedData = normalize(action.payload, boardListSchema)
 
       return flow(
         set('byId', normalizedData.entities.boards),

@@ -11,7 +11,7 @@ export const getBoardAllIds = createSelector(
 
 export const getBoardByIdMap = createSelector(
   getDomainState,
-  domainState => domainState.allIds
+  domainState => domainState.byId
 )
 
 export const getBoardById = createSelector(

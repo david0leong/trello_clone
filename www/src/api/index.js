@@ -1,5 +1,5 @@
 export const getBoards = () => {
-  new Promise(resolve => {
+  return new Promise(resolve => {
     setTimeout(() => {
       resolve([
         { id: 1, name: 'Board 1', title: 'Board 1' },
