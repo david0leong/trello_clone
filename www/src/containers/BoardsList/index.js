@@ -1,6 +1,7 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
 import { connect } from 'react-redux'
+import { List } from 'antd'
 
 import { loadBoardsRequest } from '../../redux/boards/actions'
 import { getBoards } from '../../redux/boards/selectors'
@@ -14,15 +15,18 @@ class BoardsList extends React.Component {
     const { boards } = this.props
 
     return (
-      <div>
-        <ul>
-          {boards.map(b => (
-            <li key={b.id}>
-              <Link to={`/boards/${b.id}`}>{b.name}</Link>
-            </li>
-          ))}
-        </ul>
-      </div>
+      <List
+        bordered
+        dataSource={boards}
+        renderItem={board => (
+          <List.Item>
+            <List.Item.Meta
+              title={<Link to={`/boards/${board.id}`}>{board.name}</Link>}
+              description={board.title}
+            />
+          </List.Item>
+        )}
+      />
     )
   }
 }

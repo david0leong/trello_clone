@@ -1,19 +1,24 @@
-import React, { Component } from 'react'
+import React from 'react'
+import { Layout } from 'antd'
 
-import Header from '../Header'
+import Header from '../../components/Header'
+import Footer from '../../components/Footer'
 import Main from '../Main'
 
-import './App.css'
+import './style.css'
 
-class App extends Component {
-  render() {
-    return (
-      <div className="App">
-        <Header />
-        <Main />
-      </div>
-    )
-  }
-}
+const { Content } = Layout
+
+const App = () => (
+  <Layout className="app-layout">
+    <Header />
+
+    <Content className="app-content">
+      <Main />
+    </Content>
+
+    <Footer />
+  </Layout>
+)
 
 export default App

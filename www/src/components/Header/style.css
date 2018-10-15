@@ -1,0 +1,7 @@
+.app-header {
+  display: flex;
+}
+
+.app-logo {
+  font-size: 1.5rem;
+}
