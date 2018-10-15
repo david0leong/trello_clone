@@ -4,6 +4,7 @@
   "private": true,
   "dependencies": {
     "antd": "^3.10.1",
+    "axios": "^0.18.0",
     "lodash": "^4.17.11",
     "normalizr": "^3.3.0",
     "re-reselect": "^2.1.0",
@@ -31,8 +32,5 @@
     "not dead",
     "not ie <= 11",
     "not op_mini all"
-  ],
-  "devDependencies": {
-    "babel-plugin-import": "^1.9.1"
-  }
+  ]
 }

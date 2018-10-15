@@ -29,7 +29,7 @@ $ docker-compose run --rm api rake db:create
 ### Run Local Docker Development Environment
 
 ```bash
-$ docker-compose  up
+$ docker-compose up
 ```
 
 ### Run api Unit Tests
