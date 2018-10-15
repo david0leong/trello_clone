@@ -3,8 +3,8 @@ import { Link } from 'react-router-dom'
 import { connect } from 'react-redux'
 import { List } from 'antd'
 
+import { getBoards, getBoardsLoading } from '../../redux/boards/selectors'
 import { loadBoardsRequest } from '../../redux/boards/actions'
-import { getBoards } from '../../redux/boards/selectors'
 
 class BoardsList extends React.Component {
   componentDidMount() {
@@ -12,11 +12,12 @@ class BoardsList extends React.Component {
   }
 
   render() {
-    const { boards } = this.props
+    const { boards, loading } = this.props
 
     return (
       <List
         bordered
+        loading={loading}
         dataSource={boards}
         renderItem={board => (
           <List.Item>
@@ -32,6 +33,7 @@ class BoardsList extends React.Component {
 }
 
 const mapStateToProps = state => ({
+  loading: getBoardsLoading(state),
   boards: getBoards(state),
 })
 
