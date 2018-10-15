@@ -1,8 +1,9 @@
 import { createSelector } from 'reselect'
+import createCachedSelector from 're-reselect'
 
 const DOMAIN_NAME = 'boards'
 
-const getDomainState = store => store[DOMAIN_NAME]
+const getDomainState = state => state[DOMAIN_NAME]
 
 export const getBoardAllIds = createSelector(
   getDomainState,
@@ -14,14 +15,14 @@ export const getBoardByIdMap = createSelector(
   domainState => domainState.byId
 )
 
-export const getBoardById = createSelector(
+export const getBoardById = createCachedSelector(
   getBoardByIdMap,
-  (store, id) => id,
+  (state, id) => id,
   (byId, id) => ({ ...byId[id], id })
-)
+)((state, id) => id)
 
 export const getBoards = createSelector(
+  state => state,
   getBoardAllIds,
-  getBoardByIdMap,
-  (allIds, byId) => allIds.map(id => ({ ...byId[id], id }))
+  (state, allIds) => allIds.map(id => getBoardById(state, id))
 )
