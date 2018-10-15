@@ -23,7 +23,7 @@ $ docker-compose build
 ### Create database
 
 ```bash
-$ docker-compose run --rm app rake db:create
+$ docker-compose run --rm api rake db:create
 ```
 
 ### Run Local Docker Development Environment
@@ -35,5 +35,5 @@ $ docker-compose  up
 ### Run api Unit Tests
 
 ```bash
-$ docker-compose run app rails test
+$ docker-compose run api rails test
 ```

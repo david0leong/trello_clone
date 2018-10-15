@@ -10,8 +10,9 @@ ENV PATH /trello_clone/www/node_modules/.bin:$PATH
 
 # Install and cache app dependencies
 COPY package.json /trello_clone/www/package.json
-RUN npm install --silent
-RUN npm install react-scripts@1.1.1 -g --silent
+RUN npm install yarn -g --silent
+RUN npm install create-react-app -g --silent
+RUN yarn
 
 # Start app
 CMD ["npm", "start"]
