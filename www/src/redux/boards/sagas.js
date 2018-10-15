@@ -10,9 +10,9 @@ import {
 // Workers
 export function* loadBoardsSaga() {
   try {
-    const boards = yield call(getBoards)
+    const response = yield call(getBoards)
 
-    yield put(loadBoardsSuccess(boards))
+    yield put(loadBoardsSuccess(response.data))
   } catch (err) {
     console.log('Error in getting boards', err)
     yield put(loadBoardsFailure(err))
