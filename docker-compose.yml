@@ -1,20 +1,20 @@
-version: "3"
+version: "3.5"
 
 services:
   db:
     image: postgres
     ports:
-      - 5432:5432
+      - "5432:5432"
     volumes:
       - ./db:/var/lib/postgresql/data
 
-  app:
-    build: ./app
+  api:
+    build: ./api
     volumes:
-      - ./app:/app
+      - ./api:/api
     ports:
-      - 3000:3000
+      - "3000:3000"
     depends_on:
       - db
-    entrypoint: /entrypoints/app.sh
-    command: bundle exec rails s -p 3000 -b 0.0.0.0
+    entrypoint: /entrypoints/api.sh
+    command: bundle exec rails s -p 3000 -b "0.0.0.0"
