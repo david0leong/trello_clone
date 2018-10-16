@@ -1,10 +1,13 @@
 import { all, takeLatest, call, put } from 'redux-saga/effects'
 
-import { getBoards } from '../../api'
+import { getBoards, addBoard } from '../../api'
 import {
   loadBoardsRequest,
   loadBoardsSuccess,
   loadBoardsFailure,
+  addBoardRequest,
+  addBoardSuccess,
+  addBoardFailure,
 } from './actions'
 
 // Workers
@@ -19,7 +22,20 @@ export function* loadBoardsSaga() {
   }
 }
 
+export function* addBoardSaga(action) {
+  try {
+    const response = yield call(addBoard, action.payload)
+
+    yield put(addBoardSuccess(response.data))
+  } catch (err) {
+    yield put(addBoardFailure(err))
+  }
+}
+
 // Watcher
 export default function* boardsSaga() {
-  yield all([takeLatest(loadBoardsRequest.toString(), loadBoardsSaga)])
+  yield all([
+    takeLatest(loadBoardsRequest.toString(), loadBoardsSaga),
+    takeLatest(addBoardRequest.toString(), addBoardSaga),
+  ])
 }

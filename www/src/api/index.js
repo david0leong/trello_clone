@@ -10,3 +10,5 @@ const axiosClient = axios.create({
 })
 
 export const getBoards = () => axiosClient.get(urls.boards.list())
+
+export const addBoard = params => axiosClient.post(urls.boards.list(), params)

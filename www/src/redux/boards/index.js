@@ -7,6 +7,7 @@ import {
   LOAD_BOARDS_SUCCESS,
   LOAD_BOARDS_REQUEST,
   LOAD_BOARDS_FAILURE,
+  ADD_BOARD_SUCCESS,
 } from './actionTypes'
 import { boardListSchema } from './schemas'
 
@@ -34,6 +35,15 @@ export default handleActions(
 
     [LOAD_BOARDS_FAILURE](state, action) {
       return set('loading', false)(state)
+    },
+
+    [ADD_BOARD_SUCCESS](state, action) {
+      const newBoard = action.payload
+
+      return flow(
+        set(['allIds'], state.allIds.concat(newBoard.id)),
+        set(['byId', newBoard.id], newBoard)
+      )(state)
     },
   },
   initialState
