@@ -1,7 +1,7 @@
 import { all, takeLatest, call, put } from 'redux-saga/effects'
 
 import { getBoards, addBoard, updateBoard, deleteBoard } from '../../api'
-import apiSaga from '../common/saga'
+import { apiSaga } from '../common/sagas'
 import {
   loadBoardsRequest,
   loadBoardsSuccess,
@@ -15,7 +15,7 @@ import {
   deleteBoardRequest,
   deleteBoardSuccess,
   deleteBoardFailure,
-} from './actions'
+} from '../actions'
 
 // Workers
 export function* loadBoardsSaga() {

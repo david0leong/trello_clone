@@ -4,8 +4,12 @@
 
 export default {
   base: `http://localhost:3000/`,
-  boards: {
+  board: {
     list: () => `boards/`,
     detail: id => `boards/${id}/`,
+    columns: id => `boards/${id}/columns/`,
+  },
+  columns: {
+    detail: id => `columns/${id}`,
   },
 }

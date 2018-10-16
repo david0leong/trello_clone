@@ -5,13 +5,14 @@ import { connect } from 'react-redux'
 import { List, Button, Icon } from 'antd'
 import get from 'lodash/get'
 
-import { getBoards, getBoardsLoading } from '../../redux/boards/selectors'
+import { getLoading } from '../../redux/selectors'
+import { getBoards } from '../../redux/boards/selectors'
 import {
   loadBoardsRequest,
   addBoardRequest,
   updateBoardRequest,
   deleteBoardRequest,
-} from '../../redux/boards/actions'
+} from '../../redux/actions'
 
 import BoardEditModal from '../../components/BoardEditModal'
 
@@ -128,7 +129,7 @@ class BoardsList extends React.Component {
 }
 
 const mapStateToProps = state => ({
-  loading: getBoardsLoading(state),
+  loading: getLoading(state),
   boards: getBoards(state),
 })
 

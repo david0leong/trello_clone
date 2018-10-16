@@ -5,11 +5,6 @@ const DOMAIN_NAME = 'boards'
 
 const getDomainState = state => state[DOMAIN_NAME]
 
-export const getBoardsLoading = createSelector(
-  getDomainState,
-  domainState => domainState.loading
-)
-
 export const getBoardAllIds = createSelector(
   getDomainState,
   domainState => domainState.allIds

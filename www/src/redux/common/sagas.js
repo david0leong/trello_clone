@@ -1,11 +1,6 @@
 import { call, put } from 'redux-saga/effects'
 
-export default function* apiSaga(
-  successAction,
-  failureAction,
-  apiFunc,
-  ...apiParams
-) {
+export function* apiSaga(successAction, failureAction, apiFunc, ...apiParams) {
   let response
 
   try {
