@@ -2,16 +2,15 @@ import React from 'react'
 import PropTypes from 'prop-types'
 
 import { Modal, Form, Input } from 'antd'
+import get from 'lodash/get'
 import noop from 'lodash/noop'
 
 const FormItem = Form.Item
 
-// import './style.css'
-
 class BoardEditModal extends React.Component {
   static propTypes = {
     visible: PropTypes.bool,
-    defaultBoard: PropTypes.object,
+    boardInEdit: PropTypes.object,
 
     onSubmit: PropTypes.func,
     onCancel: PropTypes.func,
@@ -19,7 +18,7 @@ class BoardEditModal extends React.Component {
 
   static defaultProps = {
     visible: false,
-    defaultBoard: {},
+    boardInEdit: {},
 
     onSubmit: noop,
     onCancel: noop,
@@ -52,7 +51,7 @@ class BoardEditModal extends React.Component {
   }
 
   render() {
-    const { visible, defaultBoard, form } = this.props
+    const { visible, boardInEdit, form } = this.props
 
     return (
       <Modal
@@ -63,14 +62,14 @@ class BoardEditModal extends React.Component {
       >
         <FormItem>
           {form.getFieldDecorator('name', {
-            initialValue: defaultBoard.name,
+            initialValue: get(boardInEdit, 'name'),
             rules: [{ required: true, message: 'Please input board name!' }],
           })(<Input placeholder="Name" />)}
         </FormItem>
 
         <FormItem>
           {form.getFieldDecorator('title', {
-            initialValue: defaultBoard.title,
+            initialValue: get(boardInEdit, 'title'),
           })(<Input placeholder="Title" />)}
         </FormItem>
       </Modal>

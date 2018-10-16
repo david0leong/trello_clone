@@ -1,6 +1,7 @@
-import { all, takeLatest, call, put } from 'redux-saga/effects'
+import { all, takeLatest, call } from 'redux-saga/effects'
 
-import { getBoards, addBoard } from '../../api'
+import { getBoards, addBoard, updateBoard } from '../../api'
+import apiSaga from '../common/saga'
 import {
   loadBoardsRequest,
   loadBoardsSuccess,
@@ -8,28 +9,37 @@ import {
   addBoardRequest,
   addBoardSuccess,
   addBoardFailure,
+  updateBoardRequest,
+  updateBoardSuccess,
+  updateBoardFailure,
 } from './actions'
 
 // Workers
 export function* loadBoardsSaga() {
-  try {
-    const response = yield call(getBoards)
-
-    yield put(loadBoardsSuccess(response.data))
-  } catch (err) {
-    console.log('Error in getting boards', err)
-    yield put(loadBoardsFailure(err))
-  }
+  yield call(apiSaga, loadBoardsSuccess, loadBoardsFailure, getBoards)
 }
 
 export function* addBoardSaga(action) {
-  try {
-    const response = yield call(addBoard, action.payload)
+  yield call(
+    apiSaga,
+    addBoardSuccess,
+    addBoardFailure,
+    addBoard,
+    action.payload
+  )
+}
 
-    yield put(addBoardSuccess(response.data))
-  } catch (err) {
-    yield put(addBoardFailure(err))
-  }
+export function* updateBoardSaga(action) {
+  const { id, params } = action.payload
+
+  yield call(
+    apiSaga,
+    updateBoardSuccess,
+    updateBoardFailure,
+    updateBoard,
+    id,
+    params
+  )
 }
 
 // Watcher
@@ -37,5 +47,6 @@ export default function* boardsSaga() {
   yield all([
     takeLatest(loadBoardsRequest.toString(), loadBoardsSaga),
     takeLatest(addBoardRequest.toString(), addBoardSaga),
+    takeLatest(updateBoardRequest.toString(), updateBoardSaga),
   ])
 }

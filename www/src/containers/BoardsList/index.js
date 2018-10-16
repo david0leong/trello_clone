@@ -3,9 +3,14 @@ import PropTypes from 'prop-types'
 import { Link } from 'react-router-dom'
 import { connect } from 'react-redux'
 import { List, Button } from 'antd'
+import get from 'lodash/get'
 
 import { getBoards, getBoardsLoading } from '../../redux/boards/selectors'
-import { loadBoardsRequest, addBoardRequest } from '../../redux/boards/actions'
+import {
+  loadBoardsRequest,
+  addBoardRequest,
+  updateBoardRequest,
+} from '../../redux/boards/actions'
 
 import BoardEditModal from '../../components/BoardEditModal'
 
@@ -18,39 +23,54 @@ class BoardsList extends React.Component {
 
     loadBoardsRequest: PropTypes.func.isRequired,
     addBoardRequest: PropTypes.func.isRequired,
+    updateBoardRequest: PropTypes.func.isRequired,
   }
 
-  state = { addBoardModalVisible: false }
+  state = {
+    boardModalVisible: false,
+    boardInEdit: null,
+  }
 
   componentDidMount() {
     this.props.loadBoardsRequest()
   }
 
-  showAddBoardModal = () => {
+  showBoardModal = board => () => {
     this.setState({
-      addBoardModalVisible: true,
+      boardModalVisible: true,
+      boardInEdit: board,
     })
   }
 
-  handleAddBoardSubmit = values => {
-    const { addBoardRequest } = this.props
+  handleBoardModalSubmit = values => {
+    const { addBoardRequest, updateBoardRequest } = this.props
+    const { boardInEdit } = this.state
+
+    if (boardInEdit) {
+      updateBoardRequest({
+        id: boardInEdit.id,
+        params: values,
+      })
+    } else {
+      addBoardRequest(values)
+    }
 
     this.setState({
-      addBoardModalVisible: false,
+      boardModalVisible: false,
+      boardInEdit: null,
     })
-
-    addBoardRequest(values)
   }
 
-  handleAddBoardCancel = () => {
+  handleBoardModalCancel = () => {
     this.setState({
-      addBoardModalVisible: false,
+      boardModalVisible: false,
+      boardInEdit: null,
     })
   }
 
   render() {
     const { boards, loading } = this.props
-    const { addBoardModalVisible } = this.state
+    const { boardModalVisible, boardInEdit } = this.state
 
     return (
       <div>
@@ -59,7 +79,13 @@ class BoardsList extends React.Component {
           loading={loading}
           dataSource={boards}
           renderItem={board => (
-            <List.Item>
+            <List.Item
+              actions={[
+                <a href="#" onClick={this.showBoardModal(board)}>
+                  Edit
+                </a>,
+              ]}
+            >
               <List.Item.Meta
                 title={<Link to={`/boards/${board.id}`}>{board.name}</Link>}
                 description={board.title}
@@ -71,15 +97,17 @@ class BoardsList extends React.Component {
         <Button
           type="primary"
           className="btn-add-board"
-          onClick={this.showAddBoardModal}
+          onClick={this.showBoardModal(null)}
         >
           Add Board +
         </Button>
 
         <BoardEditModal
-          visible={addBoardModalVisible}
-          onSubmit={this.handleAddBoardSubmit}
-          onCancel={this.handleAddBoardCancel}
+          key={get(boardInEdit, 'id', 'new')}
+          visible={boardModalVisible}
+          boardInEdit={boardInEdit}
+          onSubmit={this.handleBoardModalSubmit}
+          onCancel={this.handleBoardModalCancel}
         />
       </div>
     )
@@ -94,6 +122,7 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = {
   loadBoardsRequest,
   addBoardRequest,
+  updateBoardRequest,
 }
 
 export default connect(
