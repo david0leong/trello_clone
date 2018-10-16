@@ -1,9 +1,9 @@
 # == Schema Information
 #
-# Table name: tasks
+# Table name: columns
 #
 #  id         :bigint(8)        not null, primary key
-#  column_id  :bigint(8)
+#  board_id   :bigint(8)
 #  name       :string
 #  title      :string
 #  position   :integer
@@ -11,11 +11,8 @@
 #  updated_at :datetime         not null
 #
 
-class Task < ApplicationRecord
-  belongs_to :column
+class ColumnSerializer < ActiveModel::Serializer
+  attributes :id, :board_id, :name, :title, :position, :created_at, :updated_at
 
-  acts_as_list scope: :column
-
-  validates :column, presence: true
-  validates :name, presence: true
+  has_many :tasks
 end
