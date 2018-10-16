@@ -15,3 +15,5 @@ export const addBoard = params => axiosClient.post(urls.boards.list(), params)
 
 export const updateBoard = (id, params) =>
   axiosClient.patch(urls.boards.detail(id), params)
+
+export const deleteBoard = id => axiosClient.delete(urls.boards.detail(id))

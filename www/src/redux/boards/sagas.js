@@ -1,6 +1,6 @@
-import { all, takeLatest, call } from 'redux-saga/effects'
+import { all, takeLatest, call, put } from 'redux-saga/effects'
 
-import { getBoards, addBoard, updateBoard } from '../../api'
+import { getBoards, addBoard, updateBoard, deleteBoard } from '../../api'
 import apiSaga from '../common/saga'
 import {
   loadBoardsRequest,
@@ -12,6 +12,9 @@ import {
   updateBoardRequest,
   updateBoardSuccess,
   updateBoardFailure,
+  deleteBoardRequest,
+  deleteBoardSuccess,
+  deleteBoardFailure,
 } from './actions'
 
 // Workers
@@ -42,11 +45,23 @@ export function* updateBoardSaga(action) {
   )
 }
 
+export function* deleteBoardSaga(action) {
+  const id = action.payload
+
+  try {
+    yield call(deleteBoard, id)
+    yield put(deleteBoardSuccess(id))
+  } catch (err) {
+    yield put(deleteBoardFailure(err))
+  }
+}
+
 // Watcher
 export default function* boardsSaga() {
   yield all([
     takeLatest(loadBoardsRequest.toString(), loadBoardsSaga),
     takeLatest(addBoardRequest.toString(), addBoardSaga),
     takeLatest(updateBoardRequest.toString(), updateBoardSaga),
+    takeLatest(deleteBoardRequest.toString(), deleteBoardSaga),
   ])
 }

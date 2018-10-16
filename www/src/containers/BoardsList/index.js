@@ -2,7 +2,7 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import { Link } from 'react-router-dom'
 import { connect } from 'react-redux'
-import { List, Button } from 'antd'
+import { List, Button, Icon } from 'antd'
 import get from 'lodash/get'
 
 import { getBoards, getBoardsLoading } from '../../redux/boards/selectors'
@@ -10,6 +10,7 @@ import {
   loadBoardsRequest,
   addBoardRequest,
   updateBoardRequest,
+  deleteBoardRequest,
 } from '../../redux/boards/actions'
 
 import BoardEditModal from '../../components/BoardEditModal'
@@ -24,6 +25,7 @@ class BoardsList extends React.Component {
     loadBoardsRequest: PropTypes.func.isRequired,
     addBoardRequest: PropTypes.func.isRequired,
     updateBoardRequest: PropTypes.func.isRequired,
+    deleteBoardRequest: PropTypes.func.isRequired,
   }
 
   state = {
@@ -68,12 +70,28 @@ class BoardsList extends React.Component {
     })
   }
 
+  handleDeleteBoard = board => () => {
+    const { deleteBoardRequest } = this.props
+
+    if (window.confirm('Are you sure to remove this board?')) {
+      deleteBoardRequest(board.id)
+    }
+  }
+
   render() {
     const { boards, loading } = this.props
     const { boardModalVisible, boardInEdit } = this.state
 
     return (
       <div>
+        <Button
+          type="primary"
+          className="btn-add-board"
+          onClick={this.showBoardModal(null)}
+        >
+          <Icon type="plus" /> Add Board
+        </Button>
+
         <List
           bordered
           loading={loading}
@@ -81,9 +99,12 @@ class BoardsList extends React.Component {
           renderItem={board => (
             <List.Item
               actions={[
-                <a href="#" onClick={this.showBoardModal(board)}>
-                  Edit
-                </a>,
+                <Button onClick={this.showBoardModal(board)}>
+                  <Icon type="edit" /> Edit
+                </Button>,
+                <Button type="danger" onClick={this.handleDeleteBoard(board)}>
+                  <Icon type="delete" /> Delete
+                </Button>,
               ]}
             >
               <List.Item.Meta
@@ -93,14 +114,6 @@ class BoardsList extends React.Component {
             </List.Item>
           )}
         />
-
-        <Button
-          type="primary"
-          className="btn-add-board"
-          onClick={this.showBoardModal(null)}
-        >
-          Add Board +
-        </Button>
 
         <BoardEditModal
           key={get(boardInEdit, 'id', 'new')}
@@ -123,6 +136,7 @@ const mapDispatchToProps = {
   loadBoardsRequest,
   addBoardRequest,
   updateBoardRequest,
+  deleteBoardRequest,
 }
 
 export default connect(

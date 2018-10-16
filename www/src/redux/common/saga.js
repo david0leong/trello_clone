@@ -10,14 +10,10 @@ export default function* apiSaga(
 
   try {
     response = yield call(apiFunc, ...apiParams)
-    const { status, data } = response
+    const { data } = response
 
-    if (status === 200) {
-      if (successAction) {
-        yield put(successAction(data))
-      }
-    } else {
-      throw new Error(`The status code ${status} is not handled!`)
+    if (successAction) {
+      yield put(successAction(data))
     }
   } catch (err) {
     if (failureAction) {
