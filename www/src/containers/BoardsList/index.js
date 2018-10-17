@@ -5,10 +5,9 @@ import { connect } from 'react-redux'
 import { List, Button, Icon } from 'antd'
 import get from 'lodash/get'
 
-import { getLoading } from '../../redux/selectors'
-import { getBoards } from '../../redux/boards/selectors'
+import { selectLoading } from '../../redux/selectors'
+import { selectAllBoards } from '../../redux/boards/selectors'
 import {
-  loadBoardsRequest,
   addBoardRequest,
   updateBoardRequest,
   deleteBoardRequest,
@@ -23,7 +22,6 @@ class BoardsList extends React.Component {
     loading: PropTypes.bool.isRequired,
     boards: PropTypes.arrayOf(PropTypes.object).isRequired,
 
-    loadBoardsRequest: PropTypes.func.isRequired,
     addBoardRequest: PropTypes.func.isRequired,
     updateBoardRequest: PropTypes.func.isRequired,
     deleteBoardRequest: PropTypes.func.isRequired,
@@ -32,10 +30,6 @@ class BoardsList extends React.Component {
   state = {
     boardModalVisible: false,
     boardInEdit: null,
-  }
-
-  componentDidMount() {
-    this.props.loadBoardsRequest()
   }
 
   showBoardModal = board => () => {
@@ -129,12 +123,11 @@ class BoardsList extends React.Component {
 }
 
 const mapStateToProps = state => ({
-  loading: getLoading(state),
-  boards: getBoards(state),
+  loading: selectLoading(state),
+  boards: selectAllBoards(state),
 })
 
 const mapDispatchToProps = {
-  loadBoardsRequest,
   addBoardRequest,
   updateBoardRequest,
   deleteBoardRequest,

@@ -9,7 +9,7 @@ const axiosClient = axios.create({
   },
 })
 
-export const getBoards = () => axiosClient.get(urls.board.list())
+export const getBoards = () => axiosClient.get(urls.board.listNested())
 
 export const addBoard = params => axiosClient.post(urls.board.list(), params)
 
@@ -17,5 +17,3 @@ export const updateBoard = (id, params) =>
   axiosClient.patch(urls.board.detail(id), params)
 
 export const deleteBoard = id => axiosClient.delete(urls.board.detail(id))
-
-export const getBoardColumns = id => axiosClient.get(urls.board.columns(id))

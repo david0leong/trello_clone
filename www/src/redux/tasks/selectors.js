@@ -1,28 +1,28 @@
 import { createSelector } from 'reselect'
 import createCachedSelector from 're-reselect'
 
-const DOMAIN_NAME = 'boards'
+const DOMAIN_NAME = 'tasks'
 
 const selectDomainState = state => state[DOMAIN_NAME]
 
-const selectBoardAllIds = createSelector(
+const selectTaskAllIds = createSelector(
   selectDomainState,
   domainState => domainState.allIds
 )
 
-const selectBoardByIdMap = createSelector(
+const selectTaskByIdMap = createSelector(
   selectDomainState,
   domainState => domainState.byId
 )
 
-export const selectBoardById = createCachedSelector(
-  selectBoardByIdMap,
+export const selectTaskById = createCachedSelector(
+  selectTaskByIdMap,
   (state, boardId) => boardId,
   (byId, boardId) => byId[boardId]
 )((state, boardId) => boardId)
 
-export const selectAllBoards = state => {
-  const allIds = selectBoardAllIds(state)
+export const selectAllTasks = state => {
+  const allIds = selectTaskAllIds(state)
 
-  return allIds.map(id => selectBoardById(state, id))
+  return allIds.map(id => selectTaskById(state, id))
 }

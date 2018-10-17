@@ -3,6 +3,7 @@ import createSagaMiddleware from 'redux-saga'
 
 import rootReducer from '.'
 import rootSaga from './saga'
+import { loadBoardsSaga } from './boards/sagas'
 
 // create the saga middleware
 const sagaMiddleware = createSagaMiddleware()
@@ -16,5 +17,8 @@ const store = createStore(
 
 // run redux sagas
 sagaMiddleware.run(rootSaga)
+
+// Load boards
+sagaMiddleware.run(loadBoardsSaga)
 
 export default store

@@ -7,7 +7,7 @@ import Board from '../Board'
 const Boards = () => (
   <Switch>
     <Route exact path="/boards" component={BoardsList} />
-    <Route path="/boards/:id" component={Board} />
+    <Route path="/boards/:boardId" component={Board} />
   </Switch>
 )
 

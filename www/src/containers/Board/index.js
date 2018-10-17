@@ -1,30 +1,41 @@
 import React from 'react'
+import PropTypes from 'prop-types'
 import { Link } from 'react-router-dom'
 import { connect } from 'react-redux'
 
-import { getBoardById } from '../../redux/boards/selectors'
+import { selectBoardById } from '../../redux/boards/selectors'
 
-const Board = ({ board }) => {
-  if (!board) {
-    return <div>Sorry, but the board was not found</div>
+class Board extends React.Component {
+  static propTypes = {
+    board: PropTypes.object,
+    columns: PropTypes.arrayOf(PropTypes.object),
   }
 
-  return (
-    <div>
-      <h1>
-        {board.name} (#
-        {board.id})
-      </h1>
+  render() {
+    const { board } = this.props
 
-      <h2>Title: {board.title}</h2>
+    if (!board) {
+      return <div>Sorry, but the board was not found</div>
+    }
 
-      <Link to="/boards">Back</Link>
-    </div>
-  )
+    return (
+      <div>
+        <h1>
+          {board.name} (#
+          {board.id})
+        </h1>
+
+        <h2>Title: {board.title}</h2>
+
+        <Link to="/boards">Back</Link>
+      </div>
+    )
+  }
 }
 
 const mapStateToProps = (state, props) => ({
-  board: getBoardById(state, props.match.params.id),
+  board: selectBoardById(state, props.match.params.boardId),
+  columns: [],
 })
 
 const mapDispatchToProps = null

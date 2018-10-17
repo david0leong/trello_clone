@@ -3,10 +3,11 @@ import { normalize } from 'normalizr'
 import flow from 'lodash/fp/flow'
 import set from 'lodash/fp/set'
 import pull from 'lodash/fp/pull'
+import union from 'lodash/union'
 
 import {
-  LOAD_BOARDS_SUCCESS,
   LOAD_BOARDS_REQUEST,
+  LOAD_BOARDS_SUCCESS,
   LOAD_BOARDS_FAILURE,
   ADD_BOARD_SUCCESS,
   UPDATE_BOARD_SUCCESS,
@@ -17,8 +18,16 @@ import { boardListSchema } from './schemas'
 const initialState = {
   loading: false,
   boards: {
-    byId: {},
     allIds: [],
+    byId: {},
+  },
+  columns: {
+    allIds: [],
+    byId: {},
+  },
+  tasks: {
+    allIds: [],
+    byId: {},
   },
 }
 
@@ -34,8 +43,34 @@ export default handleActions(
       return flow(
         set('loading', false),
         set('boards', {
-          byId: normalizedData.entities.boards,
           allIds: normalizedData.result,
+          byId: normalizedData.entities.boards,
+        }),
+        set('boards', {
+          allIds: normalizedData.result,
+          byId: normalizedData.entities.boards,
+        }),
+        set('columns', {
+          allIds: union(
+            state.columns.allIds,
+            Object.keys(normalizedData.entities.columns)
+          ),
+          byId: Object.assign(
+            {},
+            state.columns.byId,
+            normalizedData.entities.columns
+          ),
+        }),
+        set('tasks', {
+          allIds: union(
+            state.tasks.allIds,
+            Object.keys(normalizedData.entities.tasks)
+          ),
+          byId: Object.assign(
+            {},
+            state.tasks.byId,
+            normalizedData.entities.tasks
+          ),
         })
       )(state)
     },
