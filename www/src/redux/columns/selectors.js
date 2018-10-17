@@ -2,6 +2,7 @@ import { createSelector } from 'reselect'
 import createCachedSelector from 're-reselect'
 import flow from 'lodash/fp/flow'
 import map from 'lodash/fp/map'
+import filter from 'lodash/fp/filter'
 import orderBy from 'lodash/fp/orderBy'
 
 import { selectTaskById } from '../tasks/selectors'
@@ -31,6 +32,7 @@ export const selectNestedColumnById = createCachedSelector(
 
     const tasks = flow(
       map(taskId => selectTaskById(state, taskId)),
+      filter(task => !!task),
       orderBy(['position'], ['asc'])
     )(column.tasks)
 

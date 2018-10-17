@@ -2,6 +2,7 @@ import { createSelector } from 'reselect'
 import createCachedSelector from 're-reselect'
 import flow from 'lodash/fp/flow'
 import map from 'lodash/fp/map'
+import filter from 'lodash/fp/filter'
 import orderBy from 'lodash/fp/orderBy'
 
 import { selectNestedColumnById } from '../columns/selectors'
@@ -36,6 +37,7 @@ export const selectNestedBoardById = createCachedSelector(
 
     const columns = flow(
       map(columnId => selectNestedColumnById(state, columnId)),
+      filter(column => !!column),
       orderBy(['position'], ['asc'])
     )(board.columns)
 

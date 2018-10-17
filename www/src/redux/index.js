@@ -64,7 +64,9 @@ const addEntitiesToStore = (store, entities) =>
  */
 const deleteEntitiesFromStore = (store, entityIds) =>
   flow(
-    update('allIds', allIds => without(allIds, ...entityIds)),
+    update('allIds', allIds =>
+      without(allIds, ...entityIds.map(entityId => entityId.toString()))
+    ),
     update('byId', byId => omit(byId, entityIds))
   )(store)
 
@@ -78,21 +80,23 @@ const deleteEntitiesFromStore = (store, entityIds) =>
  */
 const deleteColumnDeep = columnId => store => {
   const column = selectColumnById(store, columnId)
-  const ops = []
 
-  // Delete tasks deeply
-  if (column) {
-    ops.push(
-      update('tasks', tasks => deleteEntitiesFromStore(tasks, column.tasks))
-    )
+  if (!column) {
+    return store
   }
 
-  // Delete column
-  ops.push(
-    update('columns', columns => deleteEntitiesFromStore(columns, [columnId]))
-  )
+  return flow(
+    // Delete tasks deeply
+    update('tasks', tasks => deleteEntitiesFromStore(tasks, column.tasks)),
 
-  return flow(...ops)(store)
+    // Delete columns in parent board
+    update(['boards', 'byId', column.board_id, 'columns'], boardColumns =>
+      without(boardColumns, column.id)
+    ),
+
+    // Delete column
+    update('columns', columns => deleteEntitiesFromStore(columns, [columnId]))
+  )(store)
 }
 
 /**
@@ -105,19 +109,18 @@ const deleteColumnDeep = columnId => store => {
  */
 const deleteBoardDeep = boardId => store => {
   const board = selectBoardById(store, boardId)
-  const ops = []
 
-  // Delete columns deeploy
-  if (board) {
-    ops.push(...board.columns.map(columnId => deleteColumnDeep(columnId)))
+  if (!board) {
+    return store
   }
 
-  // Delete board
-  ops.push(
-    update('boards', boards => deleteEntitiesFromStore(boards, [boardId]))
-  )
+  return flow(
+    // Delete columns deeply
+    ...board.columns.map(columnId => deleteColumnDeep(columnId)),
 
-  return flow(...ops)(store)
+    // Delete board
+    update('boards', boards => deleteEntitiesFromStore(boards, [boardId]))
+  )(store)
 }
 
 export default handleActions(
@@ -191,14 +194,16 @@ export default handleActions(
       const newColumn = { ...action.payload, tasks: [] }
 
       return flow(
+        // Add column
         update('columns', columns =>
           addEntitiesToStore(columns, {
             [newColumn.id]: newColumn,
           })
         ),
+
         // Add column Id to parent board
         update(
-          ['boards', 'byId', `${newColumn.board_id}`, 'columns'],
+          ['boards', 'byId', newColumn.board_id, 'columns'],
           boardColumns => boardColumns.concat(newColumn.id)
         )
       )(state)
