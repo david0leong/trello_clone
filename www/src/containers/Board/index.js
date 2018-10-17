@@ -2,13 +2,16 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import { Link } from 'react-router-dom'
 import { connect } from 'react-redux'
+import { Breadcrumb } from 'antd'
 
 import { selectNestedBoardById } from '../../redux/boards/selectors'
+import Column from '../../components/Column'
+
+import './style.css'
 
 class Board extends React.Component {
   static propTypes = {
     nestedBoard: PropTypes.object,
-    columns: PropTypes.arrayOf(PropTypes.object),
   }
 
   render() {
@@ -19,15 +22,19 @@ class Board extends React.Component {
     }
 
     return (
-      <div>
-        <h1>
-          {nestedBoard.name} (#
-          {nestedBoard.id})
-        </h1>
+      <div className="board-container">
+        <Breadcrumb>
+          <Breadcrumb.Item>
+            <Link to="/boards">Boards</Link>
+          </Breadcrumb.Item>
+          <Breadcrumb.Item>{nestedBoard.title}</Breadcrumb.Item>
+        </Breadcrumb>
 
-        <h2>Title: {nestedBoard.title}</h2>
-
-        <Link to="/boards">Back</Link>
+        <div className="columns-container">
+          {nestedBoard.columns.map(column => (
+            <Column key={column.id} column={column} />
+          ))}
+        </div>
       </div>
     )
   }

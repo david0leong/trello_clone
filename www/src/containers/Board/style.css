@@ -1,0 +1,23 @@
+body {
+  color: #17394d;
+  font-family: Helvetica Neue, Arial, Helvetica, sans-serif;
+  font-size: 14px;
+  line-height: 20px;
+  font-weight: 400;
+}
+
+.board-container {
+  flex: 1;
+  overflow-x: auto;
+  overflow-y: hidden;
+
+  display: flex;
+  flex-direction: column;
+}
+
+.columns-container {
+  margin-top: 1rem;
+
+  display: flex;
+  flex-wrap: nowrap;
+}

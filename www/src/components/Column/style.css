@@ -1,0 +1,17 @@
+.column-container {
+  width: 300px;
+  background-color: #dfe3e6;
+  border-radius: 3px;
+  min-height: 100px;
+}
+
+.column-container:not(:first-child) {
+  margin-left: 0.5rem;
+}
+
+.column-header {
+  flex: 0 0 auto;
+  padding: 10px 8px 8px;
+  position: relative;
+  min-height: 20px;
+}
