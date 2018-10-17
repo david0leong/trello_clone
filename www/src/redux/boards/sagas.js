@@ -23,13 +23,9 @@ export function* loadBoardsSaga() {
 }
 
 export function* addBoardSaga(action) {
-  yield call(
-    apiSaga,
-    addBoardSuccess,
-    addBoardFailure,
-    addBoard,
-    action.payload
-  )
+  const params = action.payload
+
+  yield call(apiSaga, addBoardSuccess, addBoardFailure, addBoard, params)
 }
 
 export function* updateBoardSaga(action) {

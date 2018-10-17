@@ -15,6 +15,11 @@ body {
   flex-direction: column;
 }
 
+.board-header {
+  display: flex;
+  justify-content: space-between;
+}
+
 .columns-container {
   margin-top: 1rem;
 

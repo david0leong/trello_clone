@@ -1,8 +1,11 @@
 import { all, takeLatest, call, put } from 'redux-saga/effects'
 
-import { updateColumn, deleteColumn } from '../../api'
+import { addColumn, updateColumn, deleteColumn } from '../../api'
 import { apiSaga } from '../common/sagas'
 import {
+  addColumnRequest,
+  addColumnSuccess,
+  addColumnFailure,
   updateColumnRequest,
   updateColumnSuccess,
   updateColumnFailure,
@@ -12,6 +15,19 @@ import {
 } from '../actions'
 
 // Workers
+export function* addColumnSaga(action) {
+  const { boardId, params } = action.payload
+
+  yield call(
+    apiSaga,
+    addColumnSuccess,
+    addColumnFailure,
+    addColumn,
+    boardId,
+    params
+  )
+}
+
 export function* updateColumnSaga(action) {
   const { id, params } = action.payload
 
@@ -39,6 +55,7 @@ export function* deleteColumnSaga(action) {
 // Watcher
 export default function* columnsSaga() {
   yield all([
+    takeLatest(addColumnRequest.toString(), addColumnSaga),
     takeLatest(updateColumnRequest.toString(), updateColumnSaga),
     takeLatest(deleteColumnRequest.toString(), deleteColumnSaga),
   ])

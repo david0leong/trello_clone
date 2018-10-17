@@ -13,6 +13,9 @@ import {
   DELETE_BOARD_REQUEST,
   DELETE_BOARD_SUCCESS,
   DELETE_BOARD_FAILURE,
+  ADD_COLUMN_REQUEST,
+  ADD_COLUMN_SUCCESS,
+  ADD_COLUMN_FAILURE,
   UPDATE_COLUMN_REQUEST,
   UPDATE_COLUMN_SUCCESS,
   UPDATE_COLUMN_FAILURE,
@@ -36,6 +39,10 @@ export const updateBoardFailure = createAction(UPDATE_BOARD_FAILURE)
 export const deleteBoardRequest = createAction(DELETE_BOARD_REQUEST)
 export const deleteBoardSuccess = createAction(DELETE_BOARD_SUCCESS)
 export const deleteBoardFailure = createAction(DELETE_BOARD_FAILURE)
+
+export const addColumnRequest = createAction(ADD_COLUMN_REQUEST)
+export const addColumnSuccess = createAction(ADD_COLUMN_SUCCESS)
+export const addColumnFailure = createAction(ADD_COLUMN_FAILURE)
 
 export const updateColumnRequest = createAction(UPDATE_COLUMN_REQUEST)
 export const updateColumnSuccess = createAction(UPDATE_COLUMN_SUCCESS)

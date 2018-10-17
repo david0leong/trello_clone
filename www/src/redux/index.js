@@ -15,6 +15,7 @@ import {
   ADD_BOARD_SUCCESS,
   UPDATE_BOARD_SUCCESS,
   DELETE_BOARD_SUCCESS,
+  ADD_COLUMN_SUCCESS,
   UPDATE_COLUMN_SUCCESS,
   DELETE_COLUMN_SUCCESS,
 } from './actionTypes'
@@ -183,6 +184,24 @@ export default handleActions(
       const boardId = action.payload
 
       return deleteBoardDeep(boardId)(state)
+    },
+
+    [ADD_COLUMN_SUCCESS](state, action) {
+      // Add empty tasks array
+      const newColumn = { ...action.payload, tasks: [] }
+
+      return flow(
+        update('columns', columns =>
+          addEntitiesToStore(columns, {
+            [newColumn.id]: newColumn,
+          })
+        ),
+        // Add column Id to parent board
+        update(
+          ['boards', 'byId', `${newColumn.board_id}`, 'columns'],
+          boardColumns => boardColumns.concat(newColumn.id)
+        )
+      )(state)
     },
 
     [UPDATE_COLUMN_SUCCESS](state, action) {
