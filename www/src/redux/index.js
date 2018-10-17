@@ -1,9 +1,12 @@
 import { handleActions } from 'redux-actions'
 import { normalize } from 'normalizr'
 import flow from 'lodash/fp/flow'
+import update from 'lodash/fp/update'
 import set from 'lodash/fp/set'
-import pull from 'lodash/fp/pull'
+
 import union from 'lodash/union'
+import without from 'lodash/without'
+import omit from 'lodash/omit'
 
 import {
   LOAD_BOARDS_REQUEST,
@@ -31,6 +34,34 @@ const initialState = {
   },
 }
 
+/**
+ * Add entities to normalized store
+ *
+ * @param {Object} store - Normalized Store
+ * @param {Object} entities - Map of entities to add
+ *
+ * @returns {Object} - Updated store
+ */
+const addEntitiesToStore = (store, entities) =>
+  flow(
+    update('allIds', allIds => union(allIds, Object.keys(entities))),
+    update('byId', byId => Object.assign({}, byId, entities))
+  )(store)
+
+/**
+ * Delete entities from normalized store by Id
+ *
+ * @param {Object} store - Normalized Store
+ * @param {number[]} entityIds - Array of entity IDs to remove
+ *
+ * @returns {Object} - Updated store
+ */
+const deleteEntitiesFromStore = (store, entityIds) =>
+  flow(
+    update('allIds', allIds => without(allIds, ...entityIds)),
+    update('byId', byId => omit(byId, entityIds))
+  )(store)
+
 export default handleActions(
   {
     [LOAD_BOARDS_REQUEST](state) {
@@ -42,36 +73,15 @@ export default handleActions(
 
       return flow(
         set('loading', false),
-        set('boards', {
-          allIds: normalizedData.result,
-          byId: normalizedData.entities.boards,
-        }),
-        set('boards', {
-          allIds: normalizedData.result,
-          byId: normalizedData.entities.boards,
-        }),
-        set('columns', {
-          allIds: union(
-            state.columns.allIds,
-            Object.keys(normalizedData.entities.columns)
-          ),
-          byId: Object.assign(
-            {},
-            state.columns.byId,
-            normalizedData.entities.columns
-          ),
-        }),
-        set('tasks', {
-          allIds: union(
-            state.tasks.allIds,
-            Object.keys(normalizedData.entities.tasks)
-          ),
-          byId: Object.assign(
-            {},
-            state.tasks.byId,
-            normalizedData.entities.tasks
-          ),
-        })
+        update('boards', boards =>
+          addEntitiesToStore(boards, normalizedData.entities.boards)
+        ),
+        update('columns', columns =>
+          addEntitiesToStore(columns, normalizedData.entities.columns)
+        ),
+        update('tasks', tasks =>
+          addEntitiesToStore(tasks, normalizedData.entities.tasks)
+        )
       )(state)
     },
 
@@ -80,11 +90,13 @@ export default handleActions(
     },
 
     [ADD_BOARD_SUCCESS](state, action) {
-      const newBoard = action.payload
+      // Add empty columns array
+      const newBoard = { ...action.payload, columns: [] }
 
-      return flow(
-        set(['boards', 'allIds'], state.allIds.concat(newBoard.id)),
-        set(['boards', 'byId', newBoard.id], newBoard)
+      return update('boards', boards =>
+        addEntitiesToStore(boards, {
+          [newBoard.id]: newBoard,
+        })
       )(state)
     },
 
@@ -97,10 +109,9 @@ export default handleActions(
     [DELETE_BOARD_SUCCESS](state, action) {
       const id = action.payload
 
-      return flow(
-        set(['boards', 'allIds'], pull(id)(state.allIds)),
-        set(['boards', 'byId', id], undefined)
-      )(state)
+      return update('boards', boards => deleteEntitiesFromStore(boards, [id]))(
+        state
+      )
     },
   },
   initialState
