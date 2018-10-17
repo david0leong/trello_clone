@@ -83,7 +83,7 @@ class ColumnMoveModal extends React.Component {
             <Select style={{ width: '100%' }}>
               {columnPositions.map(columnPosition => (
                 <Option
-                  key={columnPosition.position}
+                  key={columnPosition.id}
                   value={columnPosition.position}
                   disabled={columnPosition.position === currentColumn.position}
                 >

@@ -13,7 +13,10 @@ class TaskMoveModal extends React.Component {
   static propTypes = {
     visible: PropTypes.bool,
     currentTask: PropTypes.object.isRequired,
-    taskPositions: PropTypes.arrayOf(PropTypes.object),
+    taskPositions: PropTypes.shape({
+      columnPositions: PropTypes.arrayOf(PropTypes.object),
+      columnTaskPositions: PropTypes.object,
+    }).isRequired,
 
     onSubmit: PropTypes.func,
     onCancel: PropTypes.func,
@@ -35,7 +38,10 @@ class TaskMoveModal extends React.Component {
       }
 
       // If position did not change, just close modal
-      if (values.position === currentTask.position) {
+      if (
+        values.column_id === currentTask.column_id &&
+        values.position === currentTask.position
+      ) {
         this.handleCancel()
       } else {
         onSubmit(values)
@@ -53,14 +59,68 @@ class TaskMoveModal extends React.Component {
     this.resetForm()
   }
 
+  // When column changes, set position to 1
+  handleColumnChange = columnId => {
+    const { form } = this.props
+
+    form.setFieldsValue({
+      position: 1,
+    })
+  }
+
   resetForm() {
     const { form } = this.props
 
     form.resetFields()
   }
 
+  renderPositionSelect() {
+    const {
+      currentTask,
+      taskPositions: { columnTaskPositions },
+      form,
+    } = this.props
+    const columnId = form.getFieldValue('column_id')
+    const taskPositions = columnTaskPositions[columnId]
+    const lastPosition = taskPositions ? taskPositions.length + 1 : 1
+    const lastPositionOption = (
+      <Option key="last" value={lastPosition}>
+        Move to last
+      </Option>
+    )
+
+    return (
+      <FormItem {...modalFormItemLayout} label="Position">
+        {form.getFieldDecorator('position', {
+          initialValue: currentTask.position,
+          rules: [
+            {
+              required: true,
+              message: 'Please select position to move task to!',
+            },
+          ],
+        })(
+          <Select style={{ width: '100%' }}>
+            {taskPositions &&
+              taskPositions.map(taskPosition => (
+                <Option key={taskPosition.id} value={taskPosition.position}>
+                  {taskPosition.title}
+                </Option>
+              ))}
+            {columnId !== currentTask.column_id && lastPositionOption}
+          </Select>
+        )}
+      </FormItem>
+    )
+  }
+
   render() {
-    const { visible, currentTask, taskPositions, form } = this.props
+    const {
+      visible,
+      currentTask,
+      taskPositions: { columnPositions },
+      form,
+    } = this.props
     const title = 'Move Task'
 
     return (
@@ -70,29 +130,28 @@ class TaskMoveModal extends React.Component {
         onOk={this.handleOk}
         onCancel={this.handleCancel}
       >
-        <FormItem {...modalFormItemLayout} label="Position">
-          {form.getFieldDecorator('position', {
-            initialValue: currentTask.position,
+        <FormItem {...modalFormItemLayout} label="Column">
+          {form.getFieldDecorator('column_id', {
+            initialValue: currentTask.column_id,
             rules: [
               {
                 required: true,
-                message: 'Please select position to move task to!',
+                message: 'Please select column to move task to!',
               },
             ],
+            onChange: this.handleColumnChange,
           })(
             <Select style={{ width: '100%' }}>
-              {taskPositions.map(taskPosition => (
-                <Option
-                  key={taskPosition.position}
-                  value={taskPosition.position}
-                  disabled={taskPosition.position === currentTask.position}
-                >
-                  {taskPosition.title}
+              {columnPositions.map(columnPosition => (
+                <Option key={columnPosition.id} value={columnPosition.id}>
+                  {columnPosition.title}
                 </Option>
               ))}
             </Select>
           )}
         </FormItem>
+
+        {this.renderPositionSelect()}
       </Modal>
     )
   }

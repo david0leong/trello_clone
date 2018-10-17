@@ -55,10 +55,10 @@ export const selectNestedColumnById = createCachedSelector(
 
 export const selectTaskPositionsOfColumn = createCachedSelector(
   selectTasksOfColumn,
-  columns =>
-    columns.map(column => ({
-      id: column.id,
-      position: column.position,
-      title: `${column.position}. ${column.title} (${column.name})`,
+  tasks =>
+    tasks.map(task => ({
+      id: task.id,
+      position: task.position,
+      title: `${task.position}. ${task.title} (${task.name})`,
     }))
 )((state, columnId) => columnId)

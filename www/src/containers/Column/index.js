@@ -172,8 +172,6 @@ class Column extends React.Component {
       return null
     }
 
-    console.log('taskPositions', taskPositions)
-
     return (
       <TaskMoveModal
         key={taskInMove.id}
