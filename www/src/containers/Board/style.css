@@ -21,9 +21,11 @@ body {
 }
 
 .columns-container {
-  margin-top: 1rem;
-
+  flex: 1;
   display: flex;
   flex-wrap: nowrap;
   align-items: flex-start;
+
+  margin-top: 1rem;
+  overflow-x: auto;
 }

@@ -7,6 +7,5 @@
   flex-direction: column;
   background-color: rgb(0, 121, 191);
   padding: 2rem;
-  overflow: auto;
   position: relative;
 }
