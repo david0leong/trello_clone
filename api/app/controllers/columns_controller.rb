@@ -6,7 +6,7 @@ class ColumnsController < ApplicationController
   def index
     @columns = @board.columns
 
-    render json: @columns
+    render json: @columns, **serializer_options
   end
 
   # GET /columns/1
@@ -52,5 +52,9 @@ class ColumnsController < ApplicationController
     # Only allow a trusted parameter "white list" through.
     def column_params
       params.require(:column).permit(:board_id, :name, :title, :position)
+    end
+
+    def serializer_options
+      { nested: params.key?(:nested) }
     end
 end

@@ -5,7 +5,7 @@ class BoardsController < ApplicationController
   def index
     @boards = Board.all
 
-    render json: @boards
+    render json: @boards, **serializer_options
   end
 
   # GET /boards/1
@@ -47,5 +47,9 @@ class BoardsController < ApplicationController
     # Only allow a trusted parameter "white list" through.
     def board_params
       params.require(:board).permit(:name, :title)
+    end
+
+    def serializer_options
+      { nested: params.key?(:nested) }
     end
 end
