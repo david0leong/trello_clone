@@ -17,3 +17,8 @@ export const updateBoard = (id, params) =>
   axiosClient.patch(urls.board.detail(id), params)
 
 export const deleteBoard = id => axiosClient.delete(urls.board.detail(id))
+
+export const updateColumn = (id, params) =>
+  axiosClient.patch(urls.column.detail(id), params)
+
+export const deleteColumn = id => axiosClient.delete(urls.column.detail(id))

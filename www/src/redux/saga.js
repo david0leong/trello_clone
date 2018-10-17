@@ -32,7 +32,8 @@
 import { all } from 'redux-saga/effects'
 
 import boardsSaga from './boards/sagas'
+import columnsSaga from './columns/sagas'
 
 export default function* rootSaga() {
-  yield all([boardsSaga()])
+  yield all([boardsSaga(), columnsSaga()])
 }

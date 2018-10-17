@@ -7,13 +7,13 @@ export default {
   board: {
     list: () => `boards`,
     listNested: () => `boards?nested`,
-    detail: id => `boards/${id}/`,
+    detail: id => `boards/${id}`,
     columns: {
-      list: id => `boards/${id}/columns/`,
+      list: id => `boards/${id}/columns`,
       listNested: id => `boards/${id}/columns?nested`,
     },
   },
-  columns: {
+  column: {
     detail: id => `columns/${id}`,
   },
 }

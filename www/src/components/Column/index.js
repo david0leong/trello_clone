@@ -3,7 +3,6 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import { Menu, Dropdown, Icon } from 'antd'
-import get from 'lodash/get'
 
 import Task from '../Task'
 import ColumnEditModal from '../ColumnEditModal'
@@ -30,15 +29,19 @@ class Column extends React.Component {
   }
 
   handleMove = () => {}
-  handleDelete = () => {}
+
+  handleDelete = () => {
+    const { onDelete } = this.props
+
+    if (window.confirm('Are you sure to remove this column?')) {
+      onDelete()
+    }
+  }
 
   handleEditModalSubmit = values => {
-    const { column, onUpdate } = this.props
+    const { onUpdate } = this.props
 
-    onUpdate({
-      id: column.id,
-      params: values,
-    })
+    onUpdate(values)
 
     this.setState({
       editModalVisible: false,

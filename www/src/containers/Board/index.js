@@ -5,6 +5,8 @@ import { connect } from 'react-redux'
 import { Breadcrumb } from 'antd'
 
 import { selectNestedBoardById } from '../../redux/boards/selectors'
+import { updateColumnRequest, deleteColumnRequest } from '../../redux/actions'
+
 import Column from '../../components/Column'
 
 import './style.css'
@@ -12,6 +14,28 @@ import './style.css'
 class Board extends React.Component {
   static propTypes = {
     nestedBoard: PropTypes.object,
+
+    updateColumnRequest: PropTypes.func.isRequired,
+    deleteColumnRequest: PropTypes.func.isRequired,
+  }
+
+  handleUpdateColumn = column => values => {
+    const { updateColumnRequest } = this.props
+
+    updateColumnRequest({
+      id: column.id,
+      params: values,
+    })
+  }
+
+  handleMoveColumn = column => position => {
+    // TODO: Handle moving column
+  }
+
+  handleDeleteColumn = column => () => {
+    const { deleteColumnRequest } = this.props
+
+    deleteColumnRequest(column.id)
   }
 
   render() {
@@ -32,7 +56,13 @@ class Board extends React.Component {
 
         <div className="columns-container">
           {nestedBoard.columns.map(column => (
-            <Column key={column.id} column={column} />
+            <Column
+              key={column.id}
+              column={column}
+              onUpdate={this.handleUpdateColumn(column)}
+              onMove={this.handleMoveColumn(column)}
+              onDelete={this.handleDeleteColumn(column)}
+            />
           ))}
         </div>
       </div>
@@ -48,7 +78,10 @@ const mapStateToProps = (state, props) => {
   }
 }
 
-const mapDispatchToProps = null
+const mapDispatchToProps = {
+  updateColumnRequest,
+  deleteColumnRequest,
+}
 
 export default connect(
   mapStateToProps,

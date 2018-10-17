@@ -13,6 +13,12 @@ import {
   DELETE_BOARD_REQUEST,
   DELETE_BOARD_SUCCESS,
   DELETE_BOARD_FAILURE,
+  UPDATE_COLUMN_REQUEST,
+  UPDATE_COLUMN_SUCCESS,
+  UPDATE_COLUMN_FAILURE,
+  DELETE_COLUMN_REQUEST,
+  DELETE_COLUMN_SUCCESS,
+  DELETE_COLUMN_FAILURE,
 } from './actionTypes'
 
 export const loadBoardsRequest = createAction(LOAD_BOARDS_REQUEST)
@@ -30,3 +36,11 @@ export const updateBoardFailure = createAction(UPDATE_BOARD_FAILURE)
 export const deleteBoardRequest = createAction(DELETE_BOARD_REQUEST)
 export const deleteBoardSuccess = createAction(DELETE_BOARD_SUCCESS)
 export const deleteBoardFailure = createAction(DELETE_BOARD_FAILURE)
+
+export const updateColumnRequest = createAction(UPDATE_COLUMN_REQUEST)
+export const updateColumnSuccess = createAction(UPDATE_COLUMN_SUCCESS)
+export const updateColumnFailure = createAction(UPDATE_COLUMN_FAILURE)
+
+export const deleteColumnRequest = createAction(DELETE_COLUMN_REQUEST)
+export const deleteColumnSuccess = createAction(DELETE_COLUMN_SUCCESS)
+export const deleteColumnFailure = createAction(DELETE_COLUMN_FAILURE)
