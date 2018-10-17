@@ -23,7 +23,7 @@ class Board extends React.Component {
 
     return (
       <div className="board-container">
-        <Breadcrumb>
+        <Breadcrumb className="board-breadcrumb">
           <Breadcrumb.Item>
             <Link to="/boards">Boards</Link>
           </Breadcrumb.Item>

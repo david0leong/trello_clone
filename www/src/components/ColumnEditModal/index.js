@@ -7,10 +7,10 @@ import noop from 'lodash/noop'
 
 const FormItem = Form.Item
 
-class BoardEditModal extends React.Component {
+class ColumnEditModal extends React.Component {
   static propTypes = {
     visible: PropTypes.bool,
-    boardInEdit: PropTypes.object,
+    columnInEdit: PropTypes.object,
 
     onSubmit: PropTypes.func,
     onCancel: PropTypes.func,
@@ -18,7 +18,7 @@ class BoardEditModal extends React.Component {
 
   static defaultProps = {
     visible: false,
-    boardInEdit: {},
+    columnInEdit: {},
 
     onSubmit: noop,
     onCancel: noop,
@@ -51,8 +51,8 @@ class BoardEditModal extends React.Component {
   }
 
   render() {
-    const { visible, boardInEdit, form } = this.props
-    const title = boardInEdit ? 'Edit Board' : 'Add Board'
+    const { visible, columnInEdit, form } = this.props
+    const title = columnInEdit ? 'Edit Column' : 'Add Column'
 
     return (
       <Modal
@@ -63,14 +63,14 @@ class BoardEditModal extends React.Component {
       >
         <FormItem>
           {form.getFieldDecorator('name', {
-            initialValue: get(boardInEdit, 'name'),
-            rules: [{ required: true, message: 'Please input board name!' }],
+            initialValue: get(columnInEdit, 'name'),
+            rules: [{ required: true, message: 'Please input column name!' }],
           })(<Input placeholder="Name" />)}
         </FormItem>
 
         <FormItem>
           {form.getFieldDecorator('title', {
-            initialValue: get(boardInEdit, 'title'),
+            initialValue: get(columnInEdit, 'title'),
           })(<Input placeholder="Title" />)}
         </FormItem>
       </Modal>
@@ -78,4 +78,4 @@ class BoardEditModal extends React.Component {
   }
 }
 
-export default Form.create()(BoardEditModal)
+export default Form.create()(ColumnEditModal)

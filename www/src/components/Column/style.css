@@ -2,7 +2,7 @@
   width: 300px;
   background-color: #dfe3e6;
   border-radius: 3px;
-  min-height: 100px;
+  overflow-y: auto;
 }
 
 .column-container:not(:first-child) {

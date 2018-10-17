@@ -3,8 +3,10 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import { Menu, Dropdown, Icon } from 'antd'
+import get from 'lodash/get'
 
 import Task from '../Task'
+import ColumnEditModal from '../ColumnEditModal'
 
 import './style.css'
 
@@ -17,9 +19,37 @@ class Column extends React.Component {
     onDelete: PropTypes.func.isRequired,
   }
 
-  handleEdit = () => {}
+  state = {
+    editModalVisible: false,
+  }
+
+  handleEdit = () => {
+    this.setState({
+      editModalVisible: true,
+    })
+  }
+
   handleMove = () => {}
   handleDelete = () => {}
+
+  handleEditModalSubmit = values => {
+    const { column, onUpdate } = this.props
+
+    onUpdate({
+      id: column.id,
+      params: values,
+    })
+
+    this.setState({
+      editModalVisible: false,
+    })
+  }
+
+  handleEditModalCancel = () => {
+    this.setState({
+      editModalVisible: false,
+    })
+  }
 
   renderColumnMenu() {
     const menu = (
@@ -57,6 +87,7 @@ class Column extends React.Component {
 
   render() {
     const { column } = this.props
+    const { editModalVisible } = this.state
 
     return (
       <div className="column-container">
@@ -73,6 +104,14 @@ class Column extends React.Component {
             <Task key={task.id} task={task} />
           ))}
         </div>
+
+        <ColumnEditModal
+          key={column.id}
+          visible={editModalVisible}
+          columnInEdit={column}
+          onSubmit={this.handleEditModalSubmit}
+          onCancel={this.handleEditModalCancel}
+        />
       </div>
     )
   }

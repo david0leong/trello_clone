@@ -28,18 +28,18 @@ class BoardsList extends React.Component {
   }
 
   state = {
-    boardModalVisible: false,
+    editModalVisible: false,
     boardInEdit: null,
   }
 
-  showBoardModal = board => () => {
+  showEditModal = board => () => {
     this.setState({
-      boardModalVisible: true,
+      editModalVisible: true,
       boardInEdit: board,
     })
   }
 
-  handleBoardModalSubmit = values => {
+  handleEditModalSubmit = values => {
     const { addBoardRequest, updateBoardRequest } = this.props
     const { boardInEdit } = this.state
 
@@ -53,14 +53,14 @@ class BoardsList extends React.Component {
     }
 
     this.setState({
-      boardModalVisible: false,
+      editModalVisible: false,
       boardInEdit: null,
     })
   }
 
-  handleBoardModalCancel = () => {
+  handleEditModalCancel = () => {
     this.setState({
-      boardModalVisible: false,
+      editModalVisible: false,
       boardInEdit: null,
     })
   }
@@ -75,26 +75,27 @@ class BoardsList extends React.Component {
 
   render() {
     const { boards, loading } = this.props
-    const { boardModalVisible, boardInEdit } = this.state
+    const { editModalVisible, boardInEdit } = this.state
 
     return (
       <div>
         <Button
           type="primary"
           className="btn-add-board"
-          onClick={this.showBoardModal(null)}
+          onClick={this.showEditModal(null)}
         >
           <Icon type="plus" /> Add Board
         </Button>
 
         <List
+          className="boards-list"
           bordered
           loading={loading}
           dataSource={boards}
           renderItem={board => (
             <List.Item
               actions={[
-                <Button onClick={this.showBoardModal(board)}>
+                <Button onClick={this.showEditModal(board)}>
                   <Icon type="edit" /> Edit
                 </Button>,
                 <Button type="danger" onClick={this.handleDeleteBoard(board)}>
@@ -112,10 +113,10 @@ class BoardsList extends React.Component {
 
         <BoardEditModal
           key={get(boardInEdit, 'id', 'new')}
-          visible={boardModalVisible}
+          visible={editModalVisible}
           boardInEdit={boardInEdit}
-          onSubmit={this.handleBoardModalSubmit}
-          onCancel={this.handleBoardModalCancel}
+          onSubmit={this.handleEditModalSubmit}
+          onCancel={this.handleEditModalCancel}
         />
       </div>
     )
