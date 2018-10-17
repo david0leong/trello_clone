@@ -36,6 +36,9 @@ import {
   ADD_TASK_REQUEST,
   ADD_TASK_SUCCESS,
   ADD_TASK_FAILURE,
+  MOVE_TASK_REQUEST,
+  MOVE_TASK_SUCCESS,
+  MOVE_TASK_FAILURE,
   UPDATE_TASK_REQUEST,
   UPDATE_TASK_SUCCESS,
   UPDATE_TASK_FAILURE,
@@ -90,6 +93,10 @@ export const addTaskFailure = createAction(ADD_TASK_FAILURE)
 export const updateTaskRequest = createAction(UPDATE_TASK_REQUEST)
 export const updateTaskSuccess = createAction(UPDATE_TASK_SUCCESS)
 export const updateTaskFailure = createAction(UPDATE_TASK_FAILURE)
+
+export const moveTaskRequest = createAction(MOVE_TASK_REQUEST)
+export const moveTaskSuccess = createAction(MOVE_TASK_SUCCESS)
+export const moveTaskFailure = createAction(MOVE_TASK_FAILURE)
 
 export const deleteTaskRequest = createAction(DELETE_TASK_REQUEST)
 export const deleteTaskSuccess = createAction(DELETE_TASK_SUCCESS)

@@ -22,23 +22,43 @@ export const selectColumnById = createCachedSelector(
   (columnsById, columnId) => columnsById[columnId]
 )((state, columnId) => columnId)
 
-export const selectNestedColumnById = createCachedSelector(
+export const selectTasksOfColumn = createCachedSelector(
   state => state,
   selectColumnById,
   (state, column) => {
     if (!column) {
-      return undefined
+      return []
     }
 
-    const tasks = flow(
+    return flow(
       map(taskId => selectTaskById(state, taskId)),
       filter(task => !!task),
       orderBy(['position'], ['asc'])
     )(column.tasks)
+  }
+)((state, columnId) => columnId)
+
+export const selectNestedColumnById = createCachedSelector(
+  selectColumnById,
+  selectTasksOfColumn,
+  (column, tasks) => {
+    if (!column) {
+      return undefined
+    }
 
     return {
       ...column,
       tasks,
     }
   }
+)((state, columnId) => columnId)
+
+export const selectTaskPositionsOfColumn = createCachedSelector(
+  selectTasksOfColumn,
+  columns =>
+    columns.map(column => ({
+      id: column.id,
+      position: column.position,
+      title: `${column.position}. ${column.title} (${column.name})`,
+    }))
 )((state, columnId) => columnId)

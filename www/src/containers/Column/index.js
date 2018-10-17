@@ -6,13 +6,17 @@ import { connect } from 'react-redux'
 import { Menu, Dropdown, Icon, Button } from 'antd'
 import get from 'lodash/get'
 
+import { selectTaskPositionsOfBoard } from '../../redux/boards/selectors'
 import {
   addTaskRequest,
   updateTaskRequest,
+  moveTaskRequest,
   deleteTaskRequest,
 } from '../../redux/actions'
+
 import Task from '../../components/Task'
 import TaskEditModal from '../../components/TaskEditModal'
+import TaskMoveModal from '../../components/TaskMoveModal'
 
 import './style.css'
 
@@ -24,15 +28,25 @@ class Column extends React.Component {
     onMove: PropTypes.func.isRequired,
     onDelete: PropTypes.func.isRequired,
 
+    // Redux state
+    taskPositions: PropTypes.shape({
+      columnPositions: PropTypes.arrayOf(PropTypes.object),
+      columnTaskPositions: PropTypes.object,
+    }).isRequired,
+
     // Redux actions
     addTaskRequest: PropTypes.func.isRequired,
     updateTaskRequest: PropTypes.func.isRequired,
+    moveTaskRequest: PropTypes.func.isRequired,
     deleteTaskRequest: PropTypes.func.isRequired,
   }
 
   state = {
     taskEditModalVisible: false,
     taskInEdit: null,
+
+    taskMoveModalVisible: false,
+    taskInMove: null,
   }
 
   showTaskEditModal = task => () => {
@@ -71,8 +85,39 @@ class Column extends React.Component {
     })
   }
 
-  handleMoveTask = task => (columnId, position) => {
-    // TODO: Handle moving task
+  showTaskMoveModal = task => () => {
+    if (task) {
+      this.setState({
+        taskMoveModalVisible: true,
+        taskInMove: task,
+      })
+    }
+  }
+
+  handleTaskMoveModalSubmit = values => {
+    const { moveTaskRequest } = this.props
+    const { taskInMove } = this.state
+
+    if (!taskInMove) {
+      return
+    }
+
+    moveTaskRequest({
+      id: taskInMove.id,
+      params: values,
+    })
+
+    this.setState({
+      taskMoveModalVisible: false,
+      taskInMove: null,
+    })
+  }
+
+  handleTaskMoveModalCancel = () => {
+    this.setState({
+      taskMoveModalVisible: false,
+      taskInMove: null,
+    })
   }
 
   handleDeleteTask = task => () => {
@@ -119,6 +164,28 @@ class Column extends React.Component {
     )
   }
 
+  renderTaskMoveModal() {
+    const { column, taskPositions } = this.props
+    const { taskMoveModalVisible, taskInMove } = this.state
+
+    if (!column || !taskInMove) {
+      return null
+    }
+
+    console.log('taskPositions', taskPositions)
+
+    return (
+      <TaskMoveModal
+        key={taskInMove.id}
+        visible={taskMoveModalVisible}
+        currentTask={taskInMove}
+        taskPositions={taskPositions}
+        onSubmit={this.handleTaskMoveModalSubmit}
+        onCancel={this.handleTaskMoveModalCancel}
+      />
+    )
+  }
+
   render() {
     const { column } = this.props
     const { taskEditModalVisible, taskInEdit } = this.state
@@ -139,7 +206,7 @@ class Column extends React.Component {
               key={task.id}
               task={task}
               onEdit={this.showTaskEditModal(task)}
-              onMove={this.handleMoveTask(task)}
+              onMove={this.showTaskMoveModal(task)}
               onDelete={this.handleDeleteTask(task)}
             />
           ))}
@@ -163,16 +230,25 @@ class Column extends React.Component {
           onSubmit={this.handleTaskEditModalSubmit}
           onCancel={this.handleTaskEditModalCancel}
         />
+
+        {this.renderTaskMoveModal()}
       </div>
     )
   }
 }
 
-const mapStateToProps = null
+const mapStateToProps = (state, props) => {
+  const { column } = props
+
+  return {
+    taskPositions: selectTaskPositionsOfBoard(state, column.board_id),
+  }
+}
 
 const mapDispatchToProps = {
   addTaskRequest,
   updateTaskRequest,
+  moveTaskRequest,
   deleteTaskRequest,
 }
 

@@ -51,7 +51,7 @@ class ColumnsController < ApplicationController
 
     # Only allow a trusted parameter "white list" through.
     def column_params
-      params.require(:column).permit(:board_id, :name, :title, :position)
+      params.require(:column).permit(:name, :title, :position)
     end
 
     def serializer_options
