@@ -5,7 +5,10 @@ import { connect } from 'react-redux'
 import { Breadcrumb, Button, Icon } from 'antd'
 import get from 'lodash/get'
 
-import { selectNestedBoardById } from '../../redux/boards/selectors'
+import {
+  selectNestedBoardById,
+  selectColumnPositionsOfBoard,
+} from '../../redux/boards/selectors'
 import {
   addColumnRequest,
   updateColumnRequest,
@@ -21,6 +24,7 @@ import './style.css'
 class Board extends React.Component {
   static propTypes = {
     board: PropTypes.object,
+    columnPositions: PropTypes.arrayOf(PropTypes.object),
 
     addColumnRequest: PropTypes.func.isRequired,
     updateColumnRequest: PropTypes.func.isRequired,
@@ -114,14 +118,29 @@ class Board extends React.Component {
     }
   }
 
+  renderColumnMoveModal() {
+    const { board, columnPositions } = this.props
+    const { columnMoveModalVisible, columnInMove } = this.state
+
+    if (!board || !columnInMove) {
+      return null
+    }
+
+    return (
+      <ColumnMoveModal
+        key={columnInMove.id}
+        visible={columnMoveModalVisible}
+        currentColumn={columnInMove}
+        columnPositions={columnPositions}
+        onSubmit={this.handleColumnMoveModalSubmit}
+        onCancel={this.handleColumnMoveModalCancel}
+      />
+    )
+  }
+
   render() {
     const { board } = this.props
-    const {
-      columnEditModalVisible,
-      columnInEdit,
-      columnMoveModalVisible,
-      columnInMove,
-    } = this.state
+    const { columnEditModalVisible, columnInEdit } = this.state
 
     if (!board) {
       return <div>Sorry, but the board was not found</div>
@@ -166,15 +185,7 @@ class Board extends React.Component {
           onCancel={this.handleColumnEditModalCancel}
         />
 
-        {columnInMove && (
-          <ColumnMoveModal
-            key={columnInMove.id}
-            visible={columnMoveModalVisible}
-            column={columnInMove}
-            onSubmit={this.handleColumnMoveModalSubmit}
-            onCancel={this.handleColumnMoveModalCancel}
-          />
-        )}
+        {this.renderColumnMoveModal()}
       </div>
     )
   }
@@ -185,6 +196,7 @@ const mapStateToProps = (state, props) => {
 
   return {
     board: selectNestedBoardById(state, boardId),
+    columnPositions: selectColumnPositionsOfBoard(state, boardId),
   }
 }
 

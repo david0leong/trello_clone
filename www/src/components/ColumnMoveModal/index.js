@@ -2,8 +2,9 @@ import React from 'react'
 import PropTypes from 'prop-types'
 
 import { Modal, Form, Select } from 'antd'
-import get from 'lodash/get'
 import noop from 'lodash/noop'
+
+import { modalFormItemLayout } from '../../utils/form'
 
 const FormItem = Form.Item
 const Option = Select.Option
@@ -11,7 +12,8 @@ const Option = Select.Option
 class ColumnMoveModal extends React.Component {
   static propTypes = {
     visible: PropTypes.bool,
-    column: PropTypes.object.isRequired,
+    currentColumn: PropTypes.object.isRequired,
+    columnPositions: PropTypes.arrayOf(PropTypes.object),
 
     onSubmit: PropTypes.func,
     onCancel: PropTypes.func,
@@ -51,7 +53,7 @@ class ColumnMoveModal extends React.Component {
   }
 
   render() {
-    const { visible, column, form } = this.props
+    const { visible, currentColumn, columnPositions, form } = this.props
     const title = 'Move Column'
 
     return (
@@ -61,9 +63,9 @@ class ColumnMoveModal extends React.Component {
         onOk={this.handleOk}
         onCancel={this.handleCancel}
       >
-        <FormItem>
+        <FormItem {...modalFormItemLayout} label="Position">
           {form.getFieldDecorator('position', {
-            initialValue: get(column, 'position'),
+            initialValue: currentColumn.position,
             rules: [
               {
                 required: true,
@@ -71,10 +73,16 @@ class ColumnMoveModal extends React.Component {
               },
             ],
           })(
-            <Select defaultValue="lucy">
-              <Option value="jack">Jack</Option>
-              <Option value="lucy">Lucy</Option>
-              <Option value="Yiminghe">yiminghe</Option>
+            <Select style={{ width: '100%' }}>
+              {columnPositions.map(columnPosition => (
+                <Option
+                  key={columnPosition.position}
+                  value={columnPosition.position}
+                  disabled={columnPosition.position === currentColumn.position}
+                >
+                  {columnPosition.title}
+                </Option>
+              ))}
             </Select>
           )}
         </FormItem>

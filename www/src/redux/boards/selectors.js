@@ -5,7 +5,7 @@ import map from 'lodash/fp/map'
 import filter from 'lodash/fp/filter'
 import orderBy from 'lodash/fp/orderBy'
 
-import { selectNestedColumnById } from '../columns/selectors'
+import { selectColumnById, selectNestedColumnById } from '../columns/selectors'
 
 const DOMAIN_NAME = 'boards'
 
@@ -45,6 +45,26 @@ export const selectNestedBoardById = createCachedSelector(
       ...board,
       columns,
     }
+  }
+)((state, boardId) => boardId)
+
+export const selectColumnPositionsOfBoard = createCachedSelector(
+  state => state,
+  selectBoardById,
+  (state, board) => {
+    if (!board) {
+      return []
+    }
+
+    return flow(
+      map(columnId => selectColumnById(state, columnId)),
+      filter(column => !!column),
+      orderBy(['position'], ['asc']),
+      map(column => ({
+        position: column.position,
+        title: `${column.position}. ${column.title} (${column.name})`,
+      }))
+    )(board.columns)
   }
 )((state, boardId) => boardId)
 

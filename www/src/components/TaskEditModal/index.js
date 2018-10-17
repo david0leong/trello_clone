@@ -5,6 +5,8 @@ import { Modal, Form, Input } from 'antd'
 import get from 'lodash/get'
 import noop from 'lodash/noop'
 
+import { modalFormItemLayout } from '../../utils/form'
+
 const FormItem = Form.Item
 
 class TaskEditModal extends React.Component {
@@ -61,14 +63,14 @@ class TaskEditModal extends React.Component {
         onOk={this.handleOk}
         onCancel={this.handleCancel}
       >
-        <FormItem>
+        <FormItem {...modalFormItemLayout} label="Name">
           {form.getFieldDecorator('name', {
             initialValue: get(defaultTask, 'name'),
             rules: [{ required: true, message: 'Please input column name!' }],
           })(<Input placeholder="Name" />)}
         </FormItem>
 
-        <FormItem>
+        <FormItem {...modalFormItemLayout} label="Title">
           {form.getFieldDecorator('title', {
             initialValue: get(defaultTask, 'title'),
           })(<Input placeholder="Title" />)}
