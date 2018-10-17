@@ -9,7 +9,11 @@ const axiosClient = axios.create({
   },
 })
 
+// BOARD
 export const getBoards = () => axiosClient.get(urls.board.listNested())
+
+export const getBoard = boardId =>
+  axiosClient.get(urls.board.detailNested(boardId))
 
 export const addBoard = ({ name, title }) =>
   axiosClient.post(urls.board.list(), { name, title })
@@ -20,6 +24,7 @@ export const updateBoard = (boardId, { name, title }) =>
 export const deleteBoard = boardId =>
   axiosClient.delete(urls.board.detail(boardId))
 
+// COLUMN
 export const addColumn = (boardId, { name, title }) =>
   axiosClient.post(urls.board.column.list(boardId), { name, title })
 
@@ -32,6 +37,7 @@ export const moveColumn = (columnId, { position }) =>
 export const deleteColumn = columnId =>
   axiosClient.delete(urls.column.detail(columnId))
 
+// TASK
 export const addTask = (columnId, { name, title }) =>
   axiosClient.post(urls.column.task.list(columnId), { name, title })
 

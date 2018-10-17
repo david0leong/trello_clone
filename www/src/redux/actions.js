@@ -5,6 +5,9 @@ import {
   LOAD_BOARDS_REQUEST,
   LOAD_BOARDS_SUCCESS,
   LOAD_BOARDS_FAILURE,
+  LOAD_BOARD_REQUEST,
+  LOAD_BOARD_SUCCESS,
+  LOAD_BOARD_FAILURE,
   ADD_BOARD_REQUEST,
   ADD_BOARD_SUCCESS,
   ADD_BOARD_FAILURE,
@@ -41,9 +44,14 @@ import {
   DELETE_TASK_FAILURE,
 } from './actionTypes'
 
+// BOARD
 export const loadBoardsRequest = createAction(LOAD_BOARDS_REQUEST)
 export const loadBoardsSuccess = createAction(LOAD_BOARDS_SUCCESS)
 export const loadBoardsFailure = createAction(LOAD_BOARDS_FAILURE)
+
+export const loadBoardRequest = createAction(LOAD_BOARD_REQUEST)
+export const loadBoardSuccess = createAction(LOAD_BOARD_SUCCESS)
+export const loadBoardFailure = createAction(LOAD_BOARD_FAILURE)
 
 export const addBoardRequest = createAction(ADD_BOARD_REQUEST)
 export const addBoardSuccess = createAction(ADD_BOARD_SUCCESS)
@@ -57,6 +65,7 @@ export const deleteBoardRequest = createAction(DELETE_BOARD_REQUEST)
 export const deleteBoardSuccess = createAction(DELETE_BOARD_SUCCESS)
 export const deleteBoardFailure = createAction(DELETE_BOARD_FAILURE)
 
+// COLUMN
 export const addColumnRequest = createAction(ADD_COLUMN_REQUEST)
 export const addColumnSuccess = createAction(ADD_COLUMN_SUCCESS)
 export const addColumnFailure = createAction(ADD_COLUMN_FAILURE)
@@ -73,6 +82,7 @@ export const deleteColumnRequest = createAction(DELETE_COLUMN_REQUEST)
 export const deleteColumnSuccess = createAction(DELETE_COLUMN_SUCCESS)
 export const deleteColumnFailure = createAction(DELETE_COLUMN_FAILURE)
 
+// TASK
 export const addTaskRequest = createAction(ADD_TASK_REQUEST)
 export const addTaskSuccess = createAction(ADD_TASK_SUCCESS)
 export const addTaskFailure = createAction(ADD_TASK_FAILURE)

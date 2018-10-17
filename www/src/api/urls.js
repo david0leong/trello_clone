@@ -9,6 +9,7 @@ export default {
     list: () => `boards`,
     listNested: () => `boards?nested`,
     detail: boardId => `boards/${boardId}`,
+    detailNested: boardId => `boards/${boardId}?nested`,
     column: {
       list: boardId => `boards/${boardId}/columns`,
     },

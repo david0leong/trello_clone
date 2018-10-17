@@ -6,6 +6,7 @@ import set from 'lodash/fp/set'
 
 import union from 'lodash/union'
 import without from 'lodash/without'
+import pick from 'lodash/pick'
 import omit from 'lodash/omit'
 
 import {
@@ -13,6 +14,7 @@ import {
   LOAD_BOARDS_REQUEST,
   LOAD_BOARDS_SUCCESS,
   LOAD_BOARDS_FAILURE,
+  LOAD_BOARD_SUCCESS,
   ADD_BOARD_SUCCESS,
   UPDATE_BOARD_SUCCESS,
   DELETE_BOARD_SUCCESS,
@@ -27,11 +29,13 @@ import {
   UPDATE_TASK_SUCCESS,
   DELETE_TASK_SUCCESS,
 } from './actionTypes'
-import { boardListSchema } from './schemas'
+import { boardSchema, boardListSchema } from './schemas'
 
 import { selectBoardById } from './boards/selectors'
 import { selectColumnById } from './columns/selectors'
 import { selectTaskById } from './tasks/selectors'
+
+const ENTITY_KEYS = ['boards', 'columns', 'tasks']
 
 const initialState = {
   loading: false,
@@ -78,6 +82,25 @@ const deleteEntitiesFromStore = (store, entityIds) =>
     ),
     update('byId', byId => omit(byId, entityIds))
   )(store)
+
+/**
+ * Add normalized entities to store
+ *
+ * @param {Object} normalizedEntities - Normalized Entities Map
+ * @param {Object} store - Redux store
+ *
+ * @returns {Object} - Updated store
+ */
+const addNormalizedEntitiesToStore = normalizedEntities => store => {
+  const entitiesMap = pick(normalizedEntities, ENTITY_KEYS)
+  const updates = Object.keys(entitiesMap).map(entityKey =>
+    update(entityKey, entities =>
+      addEntitiesToStore(entities, entitiesMap[entityKey])
+    )
+  )
+
+  return flow(...updates)(store)
+}
 
 /**
  * Delete task deeply. It works as following:
@@ -173,37 +196,24 @@ export default handleActions(
 
     [LOAD_BOARDS_SUCCESS](state, action) {
       const normalizedData = normalize(action.payload, boardListSchema)
-      const ops = [set('loading', false)]
 
-      if (normalizedData.entities.boards) {
-        ops.push(
-          update('boards', boards =>
-            addEntitiesToStore(boards, normalizedData.entities.boards)
-          )
-        )
-      }
-
-      if (normalizedData.entities.columns) {
-        ops.push(
-          update('columns', columns =>
-            addEntitiesToStore(columns, normalizedData.entities.columns)
-          )
-        )
-      }
-
-      if (normalizedData.entities.tasks) {
-        ops.push(
-          update('tasks', tasks =>
-            addEntitiesToStore(tasks, normalizedData.entities.tasks)
-          )
-        )
-      }
-
-      return flow(...ops)(state)
+      return flow(
+        set('loading', false),
+        addNormalizedEntitiesToStore(normalizedData.entities)
+      )(state)
     },
 
     [LOAD_BOARDS_FAILURE](state, action) {
       return set('loading', false)(state)
+    },
+
+    [LOAD_BOARD_SUCCESS](state, action) {
+      const normalizedData = normalize(action.payload, boardSchema)
+
+      return flow(
+        set('loading', false),
+        addNormalizedEntitiesToStore(normalizedData.entities)
+      )(state)
     },
 
     [ADD_BOARD_SUCCESS](state, action) {

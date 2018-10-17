@@ -10,7 +10,7 @@ class BoardsController < ApplicationController
 
   # GET /boards/1
   def show
-    render json: @board
+    render json: @board, **serializer_options
   end
 
   # POST /boards

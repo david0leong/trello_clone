@@ -3,6 +3,7 @@ import { all, takeLatest, call, put } from 'redux-saga/effects'
 import { addColumn, updateColumn, moveColumn, deleteColumn } from '../../api'
 import { apiSaga } from '../common/sagas'
 import {
+  loadBoardRequest,
   addColumnRequest,
   addColumnSuccess,
   addColumnFailure,
@@ -51,7 +52,8 @@ export function* moveColumnSaga(action) {
     const response = yield call(moveColumn, id, params)
     const column = response.data
 
-    // TODO: Reload columns of parent board
+    // Reload parent board
+    yield put.resolve(loadBoardRequest(column.board_id))
 
     yield put(moveColumnSuccess(id))
   } catch (err) {
