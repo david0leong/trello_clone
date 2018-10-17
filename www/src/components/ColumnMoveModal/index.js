@@ -1,16 +1,17 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 
-import { Modal, Form, Input } from 'antd'
+import { Modal, Form, Select } from 'antd'
 import get from 'lodash/get'
 import noop from 'lodash/noop'
 
 const FormItem = Form.Item
+const Option = Select.Option
 
-class TaskEditModal extends React.Component {
+class ColumnMoveModal extends React.Component {
   static propTypes = {
     visible: PropTypes.bool,
-    defaultTask: PropTypes.object,
+    column: PropTypes.object.isRequired,
 
     onSubmit: PropTypes.func,
     onCancel: PropTypes.func,
@@ -18,7 +19,6 @@ class TaskEditModal extends React.Component {
 
   static defaultProps = {
     visible: false,
-    defaultTask: {},
 
     onSubmit: noop,
     onCancel: noop,
@@ -51,8 +51,8 @@ class TaskEditModal extends React.Component {
   }
 
   render() {
-    const { visible, defaultTask, form } = this.props
-    const title = defaultTask ? 'Edit Task' : 'Add Task'
+    const { visible, column, form } = this.props
+    const title = 'Move Column'
 
     return (
       <Modal
@@ -62,20 +62,25 @@ class TaskEditModal extends React.Component {
         onCancel={this.handleCancel}
       >
         <FormItem>
-          {form.getFieldDecorator('name', {
-            initialValue: get(defaultTask, 'name'),
-            rules: [{ required: true, message: 'Please input column name!' }],
-          })(<Input placeholder="Name" />)}
-        </FormItem>
-
-        <FormItem>
-          {form.getFieldDecorator('title', {
-            initialValue: get(defaultTask, 'title'),
-          })(<Input placeholder="Title" />)}
+          {form.getFieldDecorator('position', {
+            initialValue: get(column, 'position'),
+            rules: [
+              {
+                required: true,
+                message: 'Please select position to move column to!',
+              },
+            ],
+          })(
+            <Select defaultValue="lucy">
+              <Option value="jack">Jack</Option>
+              <Option value="lucy">Lucy</Option>
+              <Option value="Yiminghe">yiminghe</Option>
+            </Select>
+          )}
         </FormItem>
       </Modal>
     )
   }
 }
 
-export default Form.create()(TaskEditModal)
+export default Form.create()(ColumnMoveModal)

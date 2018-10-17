@@ -159,7 +159,7 @@ class Column extends React.Component {
         <TaskEditModal
           key={get(taskInEdit, 'id', 'new')}
           visible={taskEditModalVisible}
-          defaultModel={taskInEdit}
+          defaultTask={taskInEdit}
           onSubmit={this.handleTaskEditModalSubmit}
           onCancel={this.handleTaskEditModalCancel}
         />

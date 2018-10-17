@@ -14,6 +14,7 @@ import {
 
 import Column from '../Column'
 import ColumnEditModal from '../../components/ColumnEditModal'
+import ColumnMoveModal from '../../components/ColumnMoveModal'
 
 import './style.css'
 
@@ -29,6 +30,9 @@ class Board extends React.Component {
   state = {
     columnEditModalVisible: false,
     columnInEdit: null,
+
+    columnMoveModalVisible: false,
+    columnInMove: null,
   }
 
   showColumnEditModal = column => () => {
@@ -67,8 +71,39 @@ class Board extends React.Component {
     })
   }
 
-  handleMoveColumn = column => position => {
-    // TODO: Handle moving column
+  showColumnMoveModal = column => () => {
+    if (column) {
+      this.setState({
+        columnMoveModalVisible: true,
+        columnInMove: column,
+      })
+    }
+  }
+
+  handleColumnMoveModalSubmit = values => {
+    const { moveColumnRequest } = this.props
+    const { columnInMove } = this.state
+
+    if (!columnInMove) {
+      return
+    }
+
+    moveColumnRequest({
+      id: columnInMove.id,
+      params: values,
+    })
+
+    this.setState({
+      columnMoveModalVisible: false,
+      columnInMove: null,
+    })
+  }
+
+  handleColumnMoveModalCancel = () => {
+    this.setState({
+      columnMoveModalVisible: false,
+      columnInMove: null,
+    })
   }
 
   handleDeleteColumn = column => () => {
@@ -81,7 +116,12 @@ class Board extends React.Component {
 
   render() {
     const { board } = this.props
-    const { columnEditModalVisible, columnInEdit } = this.state
+    const {
+      columnEditModalVisible,
+      columnInEdit,
+      columnMoveModalVisible,
+      columnInMove,
+    } = this.state
 
     if (!board) {
       return <div>Sorry, but the board was not found</div>
@@ -112,7 +152,7 @@ class Board extends React.Component {
               key={column.id}
               column={column}
               onEdit={this.showColumnEditModal(column)}
-              onMove={this.handleMoveColumn(column)}
+              onMove={this.showColumnMoveModal(column)}
               onDelete={this.handleDeleteColumn(column)}
             />
           ))}
@@ -121,10 +161,20 @@ class Board extends React.Component {
         <ColumnEditModal
           key={get(columnInEdit, 'id', 'new')}
           visible={columnEditModalVisible}
-          defaultModel={columnInEdit}
+          defaultColumn={columnInEdit}
           onSubmit={this.handleColumnEditModalSubmit}
           onCancel={this.handleColumnEditModalCancel}
         />
+
+        {columnInMove && (
+          <ColumnMoveModal
+            key={columnInMove.id}
+            visible={columnMoveModalVisible}
+            column={columnInMove}
+            onSubmit={this.handleColumnMoveModalSubmit}
+            onCancel={this.handleColumnMoveModalCancel}
+          />
+        )}
       </div>
     )
   }

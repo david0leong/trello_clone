@@ -10,7 +10,7 @@ const FormItem = Form.Item
 class BoardEditModal extends React.Component {
   static propTypes = {
     visible: PropTypes.bool,
-    defaultModel: PropTypes.object,
+    defaultBoard: PropTypes.object,
 
     onSubmit: PropTypes.func,
     onCancel: PropTypes.func,
@@ -18,7 +18,7 @@ class BoardEditModal extends React.Component {
 
   static defaultProps = {
     visible: false,
-    defaultModel: {},
+    defaultBoard: {},
 
     onSubmit: noop,
     onCancel: noop,
@@ -51,8 +51,8 @@ class BoardEditModal extends React.Component {
   }
 
   render() {
-    const { visible, defaultModel, form } = this.props
-    const title = defaultModel ? 'Edit Board' : 'Add Board'
+    const { visible, defaultBoard, form } = this.props
+    const title = defaultBoard ? 'Edit Board' : 'Add Board'
 
     return (
       <Modal
@@ -63,14 +63,14 @@ class BoardEditModal extends React.Component {
       >
         <FormItem>
           {form.getFieldDecorator('name', {
-            initialValue: get(defaultModel, 'name'),
+            initialValue: get(defaultBoard, 'name'),
             rules: [{ required: true, message: 'Please input board name!' }],
           })(<Input placeholder="Name" />)}
         </FormItem>
 
         <FormItem>
           {form.getFieldDecorator('title', {
-            initialValue: get(defaultModel, 'title'),
+            initialValue: get(defaultBoard, 'title'),
           })(<Input placeholder="Title" />)}
         </FormItem>
       </Modal>
