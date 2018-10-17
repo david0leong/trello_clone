@@ -9,20 +9,29 @@ import without from 'lodash/without'
 import omit from 'lodash/omit'
 
 import {
+  // BOARD
   LOAD_BOARDS_REQUEST,
   LOAD_BOARDS_SUCCESS,
   LOAD_BOARDS_FAILURE,
   ADD_BOARD_SUCCESS,
   UPDATE_BOARD_SUCCESS,
   DELETE_BOARD_SUCCESS,
+
+  // COLUMN
   ADD_COLUMN_SUCCESS,
   UPDATE_COLUMN_SUCCESS,
   DELETE_COLUMN_SUCCESS,
+
+  // TASK
+  ADD_TASK_SUCCESS,
+  UPDATE_TASK_SUCCESS,
+  DELETE_TASK_SUCCESS,
 } from './actionTypes'
 import { boardListSchema } from './schemas'
 
 import { selectBoardById } from './boards/selectors'
 import { selectColumnById } from './columns/selectors'
+import { selectTaskById } from './tasks/selectors'
 
 const initialState = {
   loading: false,
@@ -71,10 +80,41 @@ const deleteEntitiesFromStore = (store, entityIds) =>
   )(store)
 
 /**
- * Delete column deeply, that is, along with tasks that belongs to column given
+ * Delete task deeply. It works as following:
+ *  - Delete the task given from parent column
+ *  - Delete the task given
  *
+ * @param {number} taskId - Task Id
  * @param {Object} store - Redux store
+ *
+ * @returns {Object} - Updated store
+ */
+const deleteTaskDeep = taskId => store => {
+  const task = selectTaskById(store, taskId)
+
+  if (!task) {
+    return store
+  }
+
+  return flow(
+    // Delete task from parent column
+    update(['columns', 'byId', task.column_id, 'tasks'], columnTasks =>
+      without(columnTasks, task.id)
+    ),
+
+    // Delete task
+    update('tasks', tasks => deleteEntitiesFromStore(tasks, [task.id]))
+  )(store)
+}
+
+/**
+ * Delete column deeply. It works as following:
+ *  - Delete tasks that belong to the column given
+ *  - Delete the column given from parent board
+ *  - Delete the column given
+ *
  * @param {number} columnId - Column Id
+ * @param {Object} store - Redux store
  *
  * @returns {Object} - Updated store
  */
@@ -87,23 +127,25 @@ const deleteColumnDeep = columnId => store => {
 
   return flow(
     // Delete tasks deeply
-    update('tasks', tasks => deleteEntitiesFromStore(tasks, column.tasks)),
+    ...column.tasks.map(taskId => deleteTaskDeep(taskId)),
 
-    // Delete columns in parent board
+    // Delete column from parent board
     update(['boards', 'byId', column.board_id, 'columns'], boardColumns =>
       without(boardColumns, column.id)
     ),
 
     // Delete column
-    update('columns', columns => deleteEntitiesFromStore(columns, [columnId]))
+    update('columns', columns => deleteEntitiesFromStore(columns, [column.id]))
   )(store)
 }
 
 /**
- * Delete board deeply, that is, along with columns and tasks that belongs to board given
+ * Delete board deeply. It works as following:
+ *  - Delete columns deeply that belongs to the board given
+ *  - Delete the board given
  *
- * @param {Object} store - Redux store
  * @param {number} boardId - Board Id
+ * @param {Object} store - Redux store
  *
  * @returns {Object} - Updated store
  */
@@ -221,6 +263,38 @@ export default handleActions(
       const columnId = action.payload
 
       return deleteColumnDeep(columnId)(state)
+    },
+
+    [ADD_TASK_SUCCESS](state, action) {
+      const newTask = action.payload
+
+      return flow(
+        // Add task
+        update('tasks', tasks =>
+          addEntitiesToStore(tasks, {
+            [newTask.id]: newTask,
+          })
+        ),
+
+        // Add task Id to parent column
+        update(['columns', 'byId', newTask.column_id, 'tasks'], columnTasks =>
+          columnTasks.concat(newTask.id)
+        )
+      )(state)
+    },
+
+    [UPDATE_TASK_SUCCESS](state, action) {
+      const updatedTask = action.payload
+
+      return update(['tasks', 'byId', updatedTask.id], task =>
+        Object.assign({}, task, updatedTask)
+      )(state)
+    },
+
+    [DELETE_TASK_SUCCESS](state, action) {
+      const taskId = action.payload
+
+      return deleteTaskDeep(taskId)(state)
     },
   },
   initialState

@@ -1,6 +1,7 @@
 import { createAction } from 'redux-actions'
 
 import {
+  // BOARD
   LOAD_BOARDS_REQUEST,
   LOAD_BOARDS_SUCCESS,
   LOAD_BOARDS_FAILURE,
@@ -13,6 +14,8 @@ import {
   DELETE_BOARD_REQUEST,
   DELETE_BOARD_SUCCESS,
   DELETE_BOARD_FAILURE,
+
+  // COLUMN
   ADD_COLUMN_REQUEST,
   ADD_COLUMN_SUCCESS,
   ADD_COLUMN_FAILURE,
@@ -22,6 +25,17 @@ import {
   DELETE_COLUMN_REQUEST,
   DELETE_COLUMN_SUCCESS,
   DELETE_COLUMN_FAILURE,
+
+  // TASK
+  ADD_TASK_REQUEST,
+  ADD_TASK_SUCCESS,
+  ADD_TASK_FAILURE,
+  UPDATE_TASK_REQUEST,
+  UPDATE_TASK_SUCCESS,
+  UPDATE_TASK_FAILURE,
+  DELETE_TASK_REQUEST,
+  DELETE_TASK_SUCCESS,
+  DELETE_TASK_FAILURE,
 } from './actionTypes'
 
 export const loadBoardsRequest = createAction(LOAD_BOARDS_REQUEST)
@@ -51,3 +65,15 @@ export const updateColumnFailure = createAction(UPDATE_COLUMN_FAILURE)
 export const deleteColumnRequest = createAction(DELETE_COLUMN_REQUEST)
 export const deleteColumnSuccess = createAction(DELETE_COLUMN_SUCCESS)
 export const deleteColumnFailure = createAction(DELETE_COLUMN_FAILURE)
+
+export const addTaskRequest = createAction(ADD_TASK_REQUEST)
+export const addTaskSuccess = createAction(ADD_TASK_SUCCESS)
+export const addTaskFailure = createAction(ADD_TASK_FAILURE)
+
+export const updateTaskRequest = createAction(UPDATE_TASK_REQUEST)
+export const updateTaskSuccess = createAction(UPDATE_TASK_SUCCESS)
+export const updateTaskFailure = createAction(UPDATE_TASK_FAILURE)
+
+export const deleteTaskRequest = createAction(DELETE_TASK_REQUEST)
+export const deleteTaskSuccess = createAction(DELETE_TASK_SUCCESS)
+export const deleteTaskFailure = createAction(DELETE_TASK_FAILURE)

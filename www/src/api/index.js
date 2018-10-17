@@ -19,11 +19,19 @@ export const updateBoard = (boardId, params) =>
 export const deleteBoard = boardId =>
   axiosClient.delete(urls.board.detail(boardId))
 
+export const addColumn = (boardId, params) =>
+  axiosClient.post(urls.board.column.list(boardId), params)
+
 export const updateColumn = (columnId, params) =>
   axiosClient.patch(urls.column.detail(columnId), params)
 
 export const deleteColumn = columnId =>
   axiosClient.delete(urls.column.detail(columnId))
 
-export const addColumn = (boardId, params) =>
-  axiosClient.post(urls.board.column.list(boardId), params)
+export const addTask = (columnId, params) =>
+  axiosClient.post(urls.column.task.list(columnId), params)
+
+export const updateTask = (taskId, params) =>
+  axiosClient.patch(urls.task.detail(taskId), params)
+
+export const deleteTask = taskId => axiosClient.delete(urls.task.detail(taskId))
