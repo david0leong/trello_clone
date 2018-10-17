@@ -1,5 +1,7 @@
 # Trello Clone
 
+This is a Trello Clone web app built by David Leong.
+
 ## Requirements
 
 - boards APIs - CRUD operations (each board has a name / title)
@@ -10,9 +12,26 @@
   order must be persisted in the DB). Can skip UI for dragging items if
   desired, but API endpoints must support this
 
-## How to run
+## Frameworks And Libraries Used
+
+- Rails 5 for building APIs
+- React v16 for building front-end app
+- Axios for calling api endpionts
+- antd for building UI
+- Redux
+- React-router v4
+- Redux-saga
+- normalizr for normalizing nested data
+- redux-actions for redux utilities
+- reselect and re-reselect for memoized selectors
+
+## How to run the app
+
+This app is composed in multi-services using Docker compose.
 
 ### Install Docker
+
+Please reference Docker documentation for installing docker.
 
 ### Build Docker Development Environment
 
@@ -32,7 +51,13 @@ $ docker-compose run --rm api rake db:create
 $ docker-compose up
 ```
 
-### Run api Unit Tests
+### Enjoy the app
+
+Go to `http://localhost:8000` in your browser.
+
+The API is hosted on `http://localhost:3000`.
+
+## Run API Unit Tests
 
 ```bash
 $ docker-compose run api rails test
