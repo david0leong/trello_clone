@@ -1,6 +1,8 @@
 import { createSelector } from 'reselect'
 import createCachedSelector from 're-reselect'
 
+import { selectNestedColumnById } from '../columns/selectors'
+
 const DOMAIN_NAME = 'boards'
 
 const selectDomainState = state => state[DOMAIN_NAME]
@@ -18,11 +20,31 @@ const selectBoardByIdMap = createSelector(
 export const selectBoardById = createCachedSelector(
   selectBoardByIdMap,
   (state, boardId) => boardId,
-  (byId, boardId) => byId[boardId]
+  (boardsById, boardId) => boardsById[boardId]
 )((state, boardId) => boardId)
 
-export const selectAllBoards = state => {
-  const allIds = selectBoardAllIds(state)
+export const selectNestedBoardById = createCachedSelector(
+  state => state,
+  selectBoardById,
+  (state, board) => {
+    if (!board) {
+      return undefined
+    }
 
-  return allIds.map(id => selectBoardById(state, id))
-}
+    const columns = board.columns.map(columnId =>
+      selectNestedColumnById(state, columnId)
+    )
+
+    return {
+      ...board,
+      columns,
+    }
+  }
+)((state, boardId) => boardId)
+
+export const selectAllBoards = createSelector(
+  state => state,
+  selectBoardAllIds,
+  (state, boardAllIds) =>
+    boardAllIds.map(boardId => selectBoardById(state, boardId))
+)

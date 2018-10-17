@@ -3,29 +3,29 @@ import PropTypes from 'prop-types'
 import { Link } from 'react-router-dom'
 import { connect } from 'react-redux'
 
-import { selectBoardById } from '../../redux/boards/selectors'
+import { selectNestedBoardById } from '../../redux/boards/selectors'
 
 class Board extends React.Component {
   static propTypes = {
-    board: PropTypes.object,
+    nestedBoard: PropTypes.object,
     columns: PropTypes.arrayOf(PropTypes.object),
   }
 
   render() {
-    const { board } = this.props
+    const { nestedBoard } = this.props
 
-    if (!board) {
+    if (!nestedBoard) {
       return <div>Sorry, but the board was not found</div>
     }
 
     return (
       <div>
         <h1>
-          {board.name} (#
-          {board.id})
+          {nestedBoard.name} (#
+          {nestedBoard.id})
         </h1>
 
-        <h2>Title: {board.title}</h2>
+        <h2>Title: {nestedBoard.title}</h2>
 
         <Link to="/boards">Back</Link>
       </div>
@@ -33,10 +33,13 @@ class Board extends React.Component {
   }
 }
 
-const mapStateToProps = (state, props) => ({
-  board: selectBoardById(state, props.match.params.boardId),
-  columns: [],
-})
+const mapStateToProps = (state, props) => {
+  const { boardId } = props.match.params
+
+  return {
+    nestedBoard: selectNestedBoardById(state, boardId),
+  }
+}
 
 const mapDispatchToProps = null
 

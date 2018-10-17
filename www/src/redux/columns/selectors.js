@@ -1,15 +1,11 @@
 import { createSelector } from 'reselect'
 import createCachedSelector from 're-reselect'
 
-import { selectTaskById } from '../columns/selectors'
+import { selectTaskById } from '../tasks/selectors'
+
 const DOMAIN_NAME = 'columns'
 
 const selectDomainState = state => state[DOMAIN_NAME]
-
-const selectColumnAllIds = createSelector(
-  selectDomainState,
-  domainState => domainState.allIds
-)
 
 const selectColumnByIdMap = createSelector(
   selectDomainState,
@@ -17,11 +13,19 @@ const selectColumnByIdMap = createSelector(
 )
 
 export const selectColumnById = createCachedSelector(
-  state => state,
   selectColumnByIdMap,
   (state, columnId) => columnId,
-  (state, byId, columnId) => {
-    const column = byId[columnId]
+  (columnsById, columnId) => columnsById[columnId]
+)((state, columnId) => columnId)
+
+export const selectNestedColumnById = createCachedSelector(
+  state => state,
+  selectColumnById,
+  (state, column) => {
+    if (!column) {
+      return undefined
+    }
+
     const tasks = column.tasks.map(taskId => selectTaskById(state, taskId))
 
     return {
@@ -30,9 +34,3 @@ export const selectColumnById = createCachedSelector(
     }
   }
 )((state, columnId) => columnId)
-
-export const selectAllColumns = state => {
-  const allIds = selectColumnAllIds(state)
-
-  return allIds.map(id => selectColumnById(state, id))
-}
