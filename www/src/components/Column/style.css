@@ -19,3 +19,7 @@
 .column-title {
   flex: 1;
 }
+
+.column-footer {
+  padding: 0.5rem;
+}

@@ -10,7 +10,7 @@ const FormItem = Form.Item
 class ColumnEditModal extends React.Component {
   static propTypes = {
     visible: PropTypes.bool,
-    columnInEdit: PropTypes.object,
+    defaultModel: PropTypes.object,
 
     onSubmit: PropTypes.func,
     onCancel: PropTypes.func,
@@ -18,7 +18,7 @@ class ColumnEditModal extends React.Component {
 
   static defaultProps = {
     visible: false,
-    columnInEdit: {},
+    defaultModel: {},
 
     onSubmit: noop,
     onCancel: noop,
@@ -51,8 +51,8 @@ class ColumnEditModal extends React.Component {
   }
 
   render() {
-    const { visible, columnInEdit, form } = this.props
-    const title = columnInEdit ? 'Edit Column' : 'Add Column'
+    const { visible, defaultModel, form } = this.props
+    const title = defaultModel ? 'Edit Column' : 'Add Column'
 
     return (
       <Modal
@@ -63,14 +63,14 @@ class ColumnEditModal extends React.Component {
       >
         <FormItem>
           {form.getFieldDecorator('name', {
-            initialValue: get(columnInEdit, 'name'),
+            initialValue: get(defaultModel, 'name'),
             rules: [{ required: true, message: 'Please input column name!' }],
           })(<Input placeholder="Name" />)}
         </FormItem>
 
         <FormItem>
           {form.getFieldDecorator('title', {
-            initialValue: get(columnInEdit, 'title'),
+            initialValue: get(defaultModel, 'title'),
           })(<Input placeholder="Title" />)}
         </FormItem>
       </Modal>

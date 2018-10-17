@@ -114,7 +114,7 @@ class BoardsList extends React.Component {
         <BoardEditModal
           key={get(boardInEdit, 'id', 'new')}
           visible={boardEditModalVisible}
-          boardInEdit={boardInEdit}
+          defaultModel={boardInEdit}
           onSubmit={this.handleBoardEditModalSubmit}
           onCancel={this.handleBoardEditModalCancel}
         />

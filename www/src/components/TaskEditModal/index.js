@@ -7,7 +7,7 @@ import noop from 'lodash/noop'
 
 const FormItem = Form.Item
 
-class BoardEditModal extends React.Component {
+class TaskEditModal extends React.Component {
   static propTypes = {
     visible: PropTypes.bool,
     defaultModel: PropTypes.object,
@@ -52,7 +52,7 @@ class BoardEditModal extends React.Component {
 
   render() {
     const { visible, defaultModel, form } = this.props
-    const title = defaultModel ? 'Edit Board' : 'Add Board'
+    const title = defaultModel ? 'Edit Task' : 'Add Task'
 
     return (
       <Modal
@@ -64,7 +64,7 @@ class BoardEditModal extends React.Component {
         <FormItem>
           {form.getFieldDecorator('name', {
             initialValue: get(defaultModel, 'name'),
-            rules: [{ required: true, message: 'Please input board name!' }],
+            rules: [{ required: true, message: 'Please input column name!' }],
           })(<Input placeholder="Name" />)}
         </FormItem>
 
@@ -78,4 +78,4 @@ class BoardEditModal extends React.Component {
   }
 }
 
-export default Form.create()(BoardEditModal)
+export default Form.create()(TaskEditModal)

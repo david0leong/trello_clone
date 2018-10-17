@@ -121,7 +121,7 @@ class Board extends React.Component {
         <ColumnEditModal
           key={get(columnInEdit, 'id', 'new')}
           visible={columnEditModalVisible}
-          columnInEdit={columnInEdit}
+          defaultModel={columnInEdit}
           onSubmit={this.handleColumnEditModalSubmit}
           onCancel={this.handleColumnEditModalCancel}
         />
