@@ -26,11 +26,18 @@ class ColumnMoveModal extends React.Component {
     onCancel: noop,
   }
 
-  handleOk = e => {
-    const { form, onSubmit } = this.props
+  handleOk = () => {
+    const { currentColumn, form, onSubmit } = this.props
 
     form.validateFields((err, values) => {
-      if (!err) {
+      if (err) {
+        return
+      }
+
+      // If position did not change, just close modal
+      if (values.position === currentColumn.position) {
+        this.handleCancel()
+      } else {
         onSubmit(values)
 
         this.resetForm()
@@ -38,7 +45,7 @@ class ColumnMoveModal extends React.Component {
     })
   }
 
-  handleCancel = e => {
+  handleCancel = () => {
     const { onCancel } = this.props
 
     onCancel()
