@@ -12,6 +12,7 @@ import {
 import {
   addColumnRequest,
   updateColumnRequest,
+  moveColumnRequest,
   deleteColumnRequest,
 } from '../../redux/actions'
 
@@ -28,6 +29,7 @@ class Board extends React.Component {
 
     addColumnRequest: PropTypes.func.isRequired,
     updateColumnRequest: PropTypes.func.isRequired,
+    moveColumnRequest: PropTypes.func.isRequired,
     deleteColumnRequest: PropTypes.func.isRequired,
   }
 
@@ -203,6 +205,7 @@ const mapStateToProps = (state, props) => {
 const mapDispatchToProps = {
   addColumnRequest,
   updateColumnRequest,
+  moveColumnRequest,
   deleteColumnRequest,
 }
 

@@ -19,6 +19,9 @@ import {
   ADD_COLUMN_REQUEST,
   ADD_COLUMN_SUCCESS,
   ADD_COLUMN_FAILURE,
+  MOVE_COLUMN_REQUEST,
+  MOVE_COLUMN_SUCCESS,
+  MOVE_COLUMN_FAILURE,
   UPDATE_COLUMN_REQUEST,
   UPDATE_COLUMN_SUCCESS,
   UPDATE_COLUMN_FAILURE,
@@ -61,6 +64,10 @@ export const addColumnFailure = createAction(ADD_COLUMN_FAILURE)
 export const updateColumnRequest = createAction(UPDATE_COLUMN_REQUEST)
 export const updateColumnSuccess = createAction(UPDATE_COLUMN_SUCCESS)
 export const updateColumnFailure = createAction(UPDATE_COLUMN_FAILURE)
+
+export const moveColumnRequest = createAction(MOVE_COLUMN_REQUEST)
+export const moveColumnSuccess = createAction(MOVE_COLUMN_SUCCESS)
+export const moveColumnFailure = createAction(MOVE_COLUMN_FAILURE)
 
 export const deleteColumnRequest = createAction(DELETE_COLUMN_REQUEST)
 export const deleteColumnSuccess = createAction(DELETE_COLUMN_SUCCESS)
