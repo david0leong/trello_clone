@@ -62,7 +62,7 @@ class Column extends React.Component {
 
     if (taskInEdit) {
       updateTaskRequest({
-        id: taskInEdit.id,
+        taskId: taskInEdit.id,
         params: values,
       })
     } else {
@@ -103,7 +103,7 @@ class Column extends React.Component {
     }
 
     moveTaskRequest({
-      id: taskInMove.id,
+      taskId: taskInMove.id,
       params: values,
     })
 

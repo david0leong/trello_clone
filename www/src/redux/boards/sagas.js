@@ -32,9 +32,9 @@ export function* loadBoardsSaga() {
 }
 
 export function* loadBoardSaga(action) {
-  const id = action.payload
+  const boardId = action.payload
 
-  yield call(apiSaga, loadBoardSuccess, loadBoardFailure, getBoard, id)
+  yield call(apiSaga, loadBoardSuccess, loadBoardFailure, getBoard, boardId)
 }
 
 export function* addBoardSaga(action) {
@@ -44,24 +44,24 @@ export function* addBoardSaga(action) {
 }
 
 export function* updateBoardSaga(action) {
-  const { id, params } = action.payload
+  const { boardId, params } = action.payload
 
   yield call(
     apiSaga,
     updateBoardSuccess,
     updateBoardFailure,
     updateBoard,
-    id,
+    boardId,
     params
   )
 }
 
 export function* deleteBoardSaga(action) {
-  const id = action.payload
+  const boardId = action.payload
 
   try {
-    yield call(deleteBoard, id)
-    yield put(deleteBoardSuccess(id))
+    yield call(deleteBoard, boardId)
+    yield put(deleteBoardSuccess(boardId))
   } catch (err) {
     yield put(deleteBoardFailure(err))
   }

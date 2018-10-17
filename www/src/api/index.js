@@ -41,6 +41,9 @@ export const deleteColumn = columnId =>
 export const addTask = (columnId, { name, title }) =>
   axiosClient.post(urls.column.task.list(columnId), { name, title })
 
+export const moveTask = (taskId, { column_id, position }) =>
+  axiosClient.patch(urls.task.detail(taskId), { column_id, position })
+
 export const updateTask = (taskId, { name, title }) =>
   axiosClient.patch(urls.task.detail(taskId), { name, title })
 

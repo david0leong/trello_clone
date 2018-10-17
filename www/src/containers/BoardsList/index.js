@@ -45,7 +45,7 @@ class BoardsList extends React.Component {
 
     if (boardInEdit) {
       updateBoardRequest({
-        id: boardInEdit.id,
+        boardId: boardInEdit.id,
         params: values,
       })
     } else {

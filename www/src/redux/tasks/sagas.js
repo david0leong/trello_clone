@@ -1,18 +1,23 @@
-import { all, takeLatest, call, put } from 'redux-saga/effects'
+import { all, takeLatest, call, put, select } from 'redux-saga/effects'
 
-import { addTask, updateTask, deleteTask } from '../../api'
+import { addTask, updateTask, moveTask, deleteTask } from '../../api'
 import { apiSaga } from '../common/sagas'
 import {
+  loadBoardRequest,
   addTaskRequest,
   addTaskSuccess,
   addTaskFailure,
   updateTaskRequest,
   updateTaskSuccess,
   updateTaskFailure,
+  moveTaskRequest,
+  moveTaskSuccess,
+  moveTaskFailure,
   deleteTaskRequest,
   deleteTaskSuccess,
   deleteTaskFailure,
 } from '../actions'
+import { selectColumnById } from '../columns/selectors'
 
 // Workers
 export function* addTaskSaga(action) {
@@ -22,24 +27,44 @@ export function* addTaskSaga(action) {
 }
 
 export function* updateTaskSaga(action) {
-  const { id, params } = action.payload
+  const { taskId, params } = action.payload
 
   yield call(
     apiSaga,
     updateTaskSuccess,
     updateTaskFailure,
     updateTask,
-    id,
+    taskId,
     params
   )
 }
 
-export function* deleteTaskSaga(action) {
-  const id = action.payload
+export function* moveTaskSaga(action) {
+  const { taskId, params } = action.payload
 
   try {
-    yield call(deleteTask, id)
-    yield put(deleteTaskSuccess(id))
+    const response = yield call(moveTask, taskId, params)
+    const task = response.data
+
+    // Delete current task
+    yield put.resolve(deleteTaskSuccess(taskId))
+
+    // Reload parent board
+    const column = yield select(selectColumnById, task.column_id)
+    yield put.resolve(loadBoardRequest(column.board_id))
+
+    yield put(moveTaskSuccess(taskId))
+  } catch (err) {
+    yield put(moveTaskFailure(err))
+  }
+}
+
+export function* deleteTaskSaga(action) {
+  const taskId = action.payload
+
+  try {
+    yield call(deleteTask, taskId)
+    yield put(deleteTaskSuccess(taskId))
   } catch (err) {
     yield put(deleteTaskFailure(err))
   }
@@ -50,6 +75,7 @@ export default function* tasksSaga() {
   yield all([
     takeLatest(addTaskRequest.toString(), addTaskSaga),
     takeLatest(updateTaskRequest.toString(), updateTaskSaga),
+    takeLatest(moveTaskRequest.toString(), moveTaskSaga),
     takeLatest(deleteTaskRequest.toString(), deleteTaskSaga),
   ])
 }

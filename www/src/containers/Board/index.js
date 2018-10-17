@@ -54,7 +54,7 @@ class Board extends React.Component {
 
     if (columnInEdit) {
       updateColumnRequest({
-        id: columnInEdit.id,
+        columnId: columnInEdit.id,
         params: values,
       })
     } else {
@@ -95,7 +95,7 @@ class Board extends React.Component {
     }
 
     moveColumnRequest({
-      id: columnInMove.id,
+      columnId: columnInMove.id,
       params: values,
     })
 

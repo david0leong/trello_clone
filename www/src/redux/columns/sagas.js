@@ -33,40 +33,40 @@ export function* addColumnSaga(action) {
 }
 
 export function* updateColumnSaga(action) {
-  const { id, params } = action.payload
+  const { columnId, params } = action.payload
 
   yield call(
     apiSaga,
     updateColumnSuccess,
     updateColumnFailure,
     updateColumn,
-    id,
+    columnId,
     params
   )
 }
 
 export function* moveColumnSaga(action) {
-  const { id, params } = action.payload
+  const { columnId, params } = action.payload
 
   try {
-    const response = yield call(moveColumn, id, params)
+    const response = yield call(moveColumn, columnId, params)
     const column = response.data
 
     // Reload parent board
     yield put.resolve(loadBoardRequest(column.board_id))
 
-    yield put(moveColumnSuccess(id))
+    yield put(moveColumnSuccess(columnId))
   } catch (err) {
     yield put(moveColumnFailure(err))
   }
 }
 
 export function* deleteColumnSaga(action) {
-  const id = action.payload
+  const columnId = action.payload
 
   try {
-    yield call(deleteColumn, id)
-    yield put(deleteColumnSuccess(id))
+    yield call(deleteColumn, columnId)
+    yield put(deleteColumnSuccess(columnId))
   } catch (err) {
     yield put(deleteColumnFailure(err))
   }
