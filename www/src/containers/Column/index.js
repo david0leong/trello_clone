@@ -2,10 +2,16 @@
 
 import React from 'react'
 import PropTypes from 'prop-types'
+import { connect } from 'react-redux'
 import { Menu, Dropdown, Icon, Button } from 'antd'
 import get from 'lodash/get'
 
-import Task from '../Task'
+import {
+  addTaskRequest,
+  updateTaskRequest,
+  deleteTaskRequest,
+} from '../../redux/actions'
+import Task from '../../components/Task'
 import TaskEditModal from '../../components/TaskEditModal'
 
 import './style.css'
@@ -17,6 +23,11 @@ class Column extends React.Component {
     onEdit: PropTypes.func.isRequired,
     onMove: PropTypes.func.isRequired,
     onDelete: PropTypes.func.isRequired,
+
+    // Redux actions
+    addTaskRequest: PropTypes.func.isRequired,
+    updateTaskRequest: PropTypes.func.isRequired,
+    deleteTaskRequest: PropTypes.func.isRequired,
   }
 
   state = {
@@ -157,4 +168,15 @@ class Column extends React.Component {
   }
 }
 
-export default Column
+const mapStateToProps = null
+
+const mapDispatchToProps = {
+  addTaskRequest,
+  updateTaskRequest,
+  deleteTaskRequest,
+}
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(Column)

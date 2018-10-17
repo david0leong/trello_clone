@@ -12,7 +12,7 @@ import {
   deleteColumnRequest,
 } from '../../redux/actions'
 
-import Column from '../../components/Column'
+import Column from '../Column'
 import ColumnEditModal from '../../components/ColumnEditModal'
 
 import './style.css'
