@@ -3,7 +3,9 @@ import { normalize } from 'normalizr'
 import flow from 'lodash/fp/flow'
 import update from 'lodash/fp/update'
 import set from 'lodash/fp/set'
+import mergeWith from 'lodash/fp/mergeWith'
 
+import isArray from 'lodash/isArray'
 import union from 'lodash/union'
 import without from 'lodash/without'
 import pick from 'lodash/pick'
@@ -29,7 +31,7 @@ import {
   UPDATE_TASK_SUCCESS,
   DELETE_TASK_SUCCESS,
 } from './actionTypes'
-import { boardSchema, boardListSchema } from './schemas'
+import { boardSchema, columnSchema } from './schemas'
 
 import { selectBoardById } from './boards/selectors'
 import { selectColumnById } from './columns/selectors'
@@ -53,6 +55,15 @@ const initialState = {
   },
 }
 
+const mergeWithArrayUnion = (...params) =>
+  mergeWith((objValue, srcValue) => {
+    if (isArray(objValue)) {
+      return union(objValue, srcValue)
+    }
+
+    return undefined
+  }, ...params)
+
 /**
  * Add entities to normalized store
  *
@@ -64,7 +75,7 @@ const initialState = {
 const addEntitiesToStore = (store, entities) =>
   flow(
     update('allIds', allIds => union(allIds, Object.keys(entities))),
-    update('byId', byId => Object.assign({}, byId, entities))
+    update('byId', byId => mergeWithArrayUnion(byId, entities))
   )(store)
 
 /**
@@ -195,7 +206,7 @@ export default handleActions(
     },
 
     [LOAD_BOARDS_SUCCESS](state, action) {
-      const normalizedData = normalize(action.payload, boardListSchema)
+      const normalizedData = normalize(action.payload, [boardSchema])
 
       return flow(
         set('loading', false),
@@ -217,21 +228,16 @@ export default handleActions(
     },
 
     [ADD_BOARD_SUCCESS](state, action) {
-      // Add empty columns array
-      const newBoard = { ...action.payload, columns: [] }
+      const normalizedData = normalize(action.payload, boardSchema)
 
-      return update('boards', boards =>
-        addEntitiesToStore(boards, {
-          [newBoard.id]: newBoard,
-        })
-      )(state)
+      return addNormalizedEntitiesToStore(normalizedData.entities)(state)
     },
 
     [UPDATE_BOARD_SUCCESS](state, action) {
       const updatedBoard = action.payload
 
       return update(['boards', 'byId', updatedBoard.id], board =>
-        Object.assign({}, board, updatedBoard)
+        mergeWithArrayUnion(board, updatedBoard)
       )(state)
     },
 
@@ -241,31 +247,25 @@ export default handleActions(
       return deleteBoardDeep(boardId)(state)
     },
 
+    // Add column and add it to parent board
     [ADD_COLUMN_SUCCESS](state, action) {
-      // Add empty tasks array
-      const newColumn = { ...action.payload, tasks: [] }
+      const newColumn = action.payload
+      const normalizedData = normalize(
+        {
+          id: newColumn.board_id,
+          columns: [newColumn],
+        },
+        boardSchema
+      )
 
-      return flow(
-        // Add column
-        update('columns', columns =>
-          addEntitiesToStore(columns, {
-            [newColumn.id]: newColumn,
-          })
-        ),
-
-        // Add column Id to parent board
-        update(
-          ['boards', 'byId', newColumn.board_id, 'columns'],
-          boardColumns => boardColumns.concat(newColumn.id)
-        )
-      )(state)
+      return addNormalizedEntitiesToStore(normalizedData.entities)(state)
     },
 
     [UPDATE_COLUMN_SUCCESS](state, action) {
       const updatedColumn = action.payload
 
       return update(['columns', 'byId', updatedColumn.id], column =>
-        Object.assign({}, column, updatedColumn)
+        mergeWithArrayUnion(column, updatedColumn)
       )(state)
     },
 
@@ -275,29 +275,25 @@ export default handleActions(
       return deleteColumnDeep(columnId)(state)
     },
 
+    // Add task and add it to parent column
     [ADD_TASK_SUCCESS](state, action) {
       const newTask = action.payload
+      const normalizedData = normalize(
+        {
+          id: newTask.column_id,
+          tasks: [newTask],
+        },
+        columnSchema
+      )
 
-      return flow(
-        // Add task
-        update('tasks', tasks =>
-          addEntitiesToStore(tasks, {
-            [newTask.id]: newTask,
-          })
-        ),
-
-        // Add task Id to parent column
-        update(['columns', 'byId', newTask.column_id, 'tasks'], columnTasks =>
-          columnTasks.concat(newTask.id)
-        )
-      )(state)
+      return addNormalizedEntitiesToStore(normalizedData.entities)(state)
     },
 
     [UPDATE_TASK_SUCCESS](state, action) {
       const updatedTask = action.payload
 
       return update(['tasks', 'byId', updatedTask.id], task =>
-        Object.assign({}, task, updatedTask)
+        mergeWithArrayUnion(task, updatedTask)
       )(state)
     },
 
