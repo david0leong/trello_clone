@@ -3,6 +3,7 @@ import PropTypes from 'prop-types'
 import { Link } from 'react-router-dom'
 import { connect } from 'react-redux'
 import { Breadcrumb, Button, Icon } from 'antd'
+import get from 'lodash/get'
 
 import { selectNestedBoardById } from '../../redux/boards/selectors'
 import {
@@ -26,40 +27,43 @@ class Board extends React.Component {
   }
 
   state = {
-    editModalVisible: false,
+    columnEditModalVisible: false,
+    columnInEdit: null,
   }
 
-  handleAddColumn = () => {
+  showColumnEditModal = column => () => {
     this.setState({
-      editModalVisible: true,
+      columnEditModalVisible: true,
+      columnInEdit: column,
     })
   }
 
-  handleEditModalSubmit = values => {
-    const { board, addColumnRequest } = this.props
+  handleColumnEditModalSubmit = values => {
+    const { board, addColumnRequest, updateColumnRequest } = this.props
+    const { columnInEdit } = this.state
 
-    addColumnRequest({
-      boardId: board.id,
-      params: values,
-    })
+    if (columnInEdit) {
+      updateColumnRequest({
+        id: columnInEdit.id,
+        params: values,
+      })
+    } else {
+      addColumnRequest({
+        boardId: board.id,
+        params: values,
+      })
+    }
 
     this.setState({
-      editModalVisible: false,
+      columnEditModalVisible: false,
+      columnInEdit: null,
     })
   }
 
-  handleEditModalCancel = () => {
+  handleColumnEditModalCancel = () => {
     this.setState({
-      editModalVisible: false,
-    })
-  }
-
-  handleUpdateColumn = column => values => {
-    const { updateColumnRequest } = this.props
-
-    updateColumnRequest({
-      id: column.id,
-      params: values,
+      columnEditModalVisible: false,
+      columnInEdit: null,
     })
   }
 
@@ -70,12 +74,14 @@ class Board extends React.Component {
   handleDeleteColumn = column => () => {
     const { deleteColumnRequest } = this.props
 
-    deleteColumnRequest(column.id)
+    if (window.confirm('Are you sure to remove this column?')) {
+      deleteColumnRequest(column.id)
+    }
   }
 
   render() {
     const { board } = this.props
-    const { editModalVisible } = this.state
+    const { columnEditModalVisible, columnInEdit } = this.state
 
     if (!board) {
       return <div>Sorry, but the board was not found</div>
@@ -94,7 +100,7 @@ class Board extends React.Component {
           <Button
             type="primary"
             className="btn-add-column"
-            onClick={this.handleAddColumn}
+            onClick={this.showColumnEditModal(null)}
           >
             <Icon type="plus" /> Add Column
           </Button>
@@ -105,7 +111,7 @@ class Board extends React.Component {
             <Column
               key={column.id}
               column={column}
-              onUpdate={this.handleUpdateColumn(column)}
+              onEdit={this.showColumnEditModal(column)}
               onMove={this.handleMoveColumn(column)}
               onDelete={this.handleDeleteColumn(column)}
             />
@@ -113,11 +119,11 @@ class Board extends React.Component {
         </div>
 
         <ColumnEditModal
-          key="new"
-          visible={editModalVisible}
-          columnInEdit={null}
-          onSubmit={this.handleEditModalSubmit}
-          onCancel={this.handleEditModalCancel}
+          key={get(columnInEdit, 'id', 'new')}
+          visible={columnEditModalVisible}
+          columnInEdit={columnInEdit}
+          onSubmit={this.handleColumnEditModalSubmit}
+          onCancel={this.handleColumnEditModalCancel}
         />
       </div>
     )

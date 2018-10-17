@@ -5,7 +5,6 @@ import PropTypes from 'prop-types'
 import { Menu, Dropdown, Icon } from 'antd'
 
 import Task from '../Task'
-import ColumnEditModal from '../ColumnEditModal'
 
 import './style.css'
 
@@ -13,58 +12,24 @@ class Column extends React.Component {
   static propTypes = {
     column: PropTypes.object.isRequired,
 
-    onUpdate: PropTypes.func.isRequired,
+    onEdit: PropTypes.func.isRequired,
     onMove: PropTypes.func.isRequired,
     onDelete: PropTypes.func.isRequired,
   }
 
-  state = {
-    editModalVisible: false,
-  }
-
-  handleEdit = () => {
-    this.setState({
-      editModalVisible: true,
-    })
-  }
-
-  handleMove = () => {}
-
-  handleDelete = () => {
-    const { onDelete } = this.props
-
-    if (window.confirm('Are you sure to remove this column?')) {
-      onDelete()
-    }
-  }
-
-  handleEditModalSubmit = values => {
-    const { onUpdate } = this.props
-
-    onUpdate(values)
-
-    this.setState({
-      editModalVisible: false,
-    })
-  }
-
-  handleEditModalCancel = () => {
-    this.setState({
-      editModalVisible: false,
-    })
-  }
-
   renderColumnMenu() {
+    const { onEdit, onMove, onDelete } = this.props
+
     const menu = (
       <Menu>
         <Menu.Item key="edit">
-          <a href="#" onClick={this.handleEdit}>
+          <a href="#" onClick={onEdit}>
             Edit
           </a>
         </Menu.Item>
 
         <Menu.Item key="position">
-          <a href="#" onClick={this.handleMove}>
+          <a href="#" onClick={onMove}>
             Move
           </a>
         </Menu.Item>
@@ -72,7 +37,7 @@ class Column extends React.Component {
         <Menu.Divider />
 
         <Menu.Item key="delete">
-          <a href="#" onClick={this.handleDelete}>
+          <a href="#" onClick={onDelete}>
             Delete
           </a>
         </Menu.Item>
@@ -90,7 +55,6 @@ class Column extends React.Component {
 
   render() {
     const { column } = this.props
-    const { editModalVisible } = this.state
 
     return (
       <div className="column-container">
@@ -107,14 +71,6 @@ class Column extends React.Component {
             <Task key={task.id} task={task} />
           ))}
         </div>
-
-        <ColumnEditModal
-          key={column.id}
-          visible={editModalVisible}
-          columnInEdit={column}
-          onSubmit={this.handleEditModalSubmit}
-          onCancel={this.handleEditModalCancel}
-        />
       </div>
     )
   }
